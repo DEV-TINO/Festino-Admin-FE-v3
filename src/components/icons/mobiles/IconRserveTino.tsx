@@ -4,53 +4,53 @@ const IconReserveTino: React.FC = () => {
   return (
     <div>
       <svg className="xs:w-[350px] w-[295px]" viewBox="0 0 350 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#clip0_3384_163302)">
+        <g clipPath="url(#clip0_3384_163302)">
           <path
             d="M217.678 83.4725C217.678 83.4725 204.567 96.548 202.535 102.893C202.535 102.893 196.152 99.9599 193.53 99.7258C190.909 99.4918 188.767 99.3461 186.026 103.71C183.285 108.073 180.737 114.512 180.326 118.106C179.914 121.7 181.894 124.868 187.866 127.671C193.838 130.475 203.259 133.834 210.498 133.444L216.74 119.766L222.441 93.5158L217.678 83.4673V83.4725Z"
             fill="white"
             stroke="#000001"
-            stroke-width="2.60054"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.60054"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M202.535 102.895L205.75 104.049"
             stroke="#000001"
-            stroke-width="2.60054"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.60054"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M263.621 50.2912C263.621 50.2912 267.717 45.5115 274.069 47.4254C280.484 49.3654 281.959 55.3935 280.948 59.2839C279.265 65.7488 271.881 66.5446 271.881 66.5446L263.621 50.2912Z"
             fill="#0A509D"
             stroke="#000001"
-            stroke-width="2.60054"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.60054"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M272.996 66.3575C272.996 66.3575 276.92 61.432 283.199 63.294C289.541 65.1716 291.12 71.288 290.208 75.2565C288.692 81.8566 281.454 82.7772 281.454 82.7772L272.996 66.3575Z"
             fill="#0A509D"
             stroke="#000001"
-            stroke-width="2.60054"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.60054"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M281.469 84.1806C281.469 84.1806 285.393 79.2553 291.672 81.1173C298.014 82.9948 299.593 89.1113 298.681 93.0797C297.164 99.6799 289.926 100.6 289.926 100.6L281.469 84.1806Z"
             fill="#0A509D"
             stroke="#000001"
-            stroke-width="2.60054"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.60054"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M248.148 42.2594C248.148 42.2594 249.832 36.7826 256.043 36.0753C262.323 35.3627 265.923 39.8514 266.554 43.4609C267.606 49.4629 263.808 51.3457 263.808 51.3457L248.154 42.2542L248.148 42.2594Z"
             fill="#0A509D"
             stroke="#000001"
-            stroke-width="2.60054"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.60054"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M216.554 87.9571C216.554 87.9571 209.352 108.34 211.483 134.652C213.464 159.082 226.632 180.167 252.317 180.245C288.909 180.359 303.25 161.079 296.069 121.442C289.436 84.8313 275.809 60.1938 261.285 49.0948C246.95 38.1361 230.118 39.0359 219.941 45.2096C202.463 55.8094 206.184 77.2481 216.559 87.9623L216.554 87.9571Z"
@@ -63,16 +63,16 @@ const IconReserveTino: React.FC = () => {
           <path
             d="M213.217 101.44C211.684 109.824 210.413 121.5 211.481 134.659C212.388 145.867 215.681 156.639 221.429 164.732"
             stroke="#000001"
-            stroke-width="2.60054"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.60054"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M299.238 129.03C297.862 126.799 296.481 123.725 296.069 121.442C289.436 84.8313 275.809 60.1938 261.285 49.0948C246.95 38.1361 230.118 39.0359 219.941 45.2096C202.463 55.8094 206.184 77.2481 216.559 87.9623"
             stroke="#000001"
-            stroke-width="2.60054"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.60054"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M255.522 54.8038C257.345 55.0015 258.841 55.8129 260.008 57.2328C261.144 58.6631 261.613 60.2962 261.41 62.127C261.207 63.9577 260.399 65.4453 258.982 66.5791C257.533 67.7233 255.897 68.2018 254.073 67.999C252.233 67.7961 250.748 66.9848 249.612 65.5545C248.461 64.1398 247.986 62.5118 248.184 60.6758C248.388 58.8399 249.206 57.3524 250.639 56.203C252.056 55.0692 253.682 54.601 255.522 54.8038Z"
@@ -85,31 +85,31 @@ const IconReserveTino: React.FC = () => {
           <path
             d="M249.089 63.1003C238.25 64.0365 229.839 63.5736 221.434 60.999"
             stroke="#000001"
-            stroke-width="2.60054"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.60054"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M248.897 63.1313C249.033 66.148 247.834 67.6875 246.13 67.6095C243.441 67.4847 243.394 63.6256 243.394 63.6256C242.847 66.3249 241.659 67.8072 239.835 67.7708C238.011 67.7344 236.75 66.3977 236.547 63.5579C240.935 64.0416 245.072 63.7919 248.892 63.1313H248.897Z"
             fill="white"
             stroke="#000001"
-            stroke-width="2.60054"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.60054"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M229.195 55.6391C229.067 54.0851 227.955 52.8031 225.826 53.0251C223.968 53.2193 222.873 54.2572 223.012 56.1109"
             stroke="#000001"
-            stroke-width="2.77501"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.77501"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M244.805 55.6391C244.933 54.0851 246.045 52.8031 248.174 53.0251C250.032 53.2193 251.127 54.2572 250.988 56.1109"
             stroke="#000001"
-            stroke-width="2.77501"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.77501"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M259.402 100.783C262.68 110.186 265.947 125.077 268.48 137.7C269.345 142.012 269.418 147.613 273.404 148.69C277.386 149.766 293.748 148.196 296.813 145.808C300.075 143.265 300.122 140.051 299.512 135.094C298.829 129.571 295.338 113.843 291.575 102.031"
@@ -118,56 +118,56 @@ const IconReserveTino: React.FC = () => {
           <path
             d="M259.402 100.783C262.68 110.186 265.947 125.077 268.48 137.7C269.345 142.012 269.418 147.613 273.404 148.69C277.386 149.766 293.748 148.196 296.813 145.808C300.075 143.265 300.122 140.051 299.512 135.094C298.829 129.571 295.338 113.843 291.575 102.031"
             stroke="#000001"
-            stroke-width="2.60054"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.60054"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M148.738 72.9451C148.738 72.9451 134.392 87.2526 132.168 94.1958C132.168 94.1958 125.183 90.986 122.315 90.7299C119.446 90.4738 117.103 90.3144 114.104 95.0892C111.104 99.864 108.316 106.91 107.866 110.842C107.415 114.775 109.582 118.241 116.116 121.308C122.651 124.376 132.96 128.052 140.88 127.625L147.711 112.658L153.949 83.9347L148.738 72.9395V72.9451Z"
             fill="white"
             stroke="#000001"
-            stroke-width="2.84555"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.84555"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M132.168 94.1968L135.686 95.4602"
             stroke="#000001"
-            stroke-width="2.84555"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.84555"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M199.008 36.6376C199.008 36.6376 203.49 31.4074 210.44 33.5018C217.46 35.6245 219.073 42.2205 217.967 46.4775C216.125 53.5515 208.046 54.4223 208.046 54.4223L199.008 36.6376Z"
             fill="#0A509D"
             stroke="#000001"
-            stroke-width="2.84555"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.84555"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M209.266 54.218C209.266 54.218 213.559 48.8284 220.43 50.8658C227.37 52.9203 229.097 59.6131 228.099 63.9554C226.44 71.1774 218.52 72.1847 218.52 72.1847L209.266 54.218Z"
             fill="#0A509D"
             stroke="#000001"
-            stroke-width="2.84555"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.84555"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M218.535 73.7198C218.535 73.7198 222.829 68.3304 229.7 70.3678C236.639 72.4223 238.367 79.115 237.369 83.4573C235.71 90.6794 227.79 91.6867 227.79 91.6867L218.535 73.7198Z"
             fill="#0A509D"
             stroke="#000001"
-            stroke-width="2.84555"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.84555"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M182.078 27.8492C182.078 27.8492 183.92 21.8564 190.717 21.0824C197.588 20.3027 201.528 25.2142 202.218 29.1639C203.369 35.7314 199.213 37.7915 199.213 37.7915L182.084 27.8435L182.078 27.8492Z"
             fill="#0A509D"
             stroke="#000001"
-            stroke-width="2.84555"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.84555"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M147.507 77.8526C147.507 77.8526 139.627 100.156 141.959 128.947C144.126 155.678 158.535 178.75 186.64 178.836C226.68 178.961 242.372 157.864 234.514 114.492C227.256 74.4323 212.345 47.4735 196.453 35.3287C180.767 23.3375 162.349 24.3221 151.213 31.0774C132.089 42.6759 136.16 66.1346 147.513 77.8583L147.507 77.8526Z"
@@ -180,16 +180,16 @@ const IconReserveTino: React.FC = () => {
           <path
             d="M143.855 92.6055C142.178 101.78 140.787 114.556 141.956 128.954C142.948 141.219 146.552 153.005 152.841 161.86"
             stroke="#000001"
-            stroke-width="2.84555"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.84555"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M237.981 122.795C236.476 120.354 234.965 116.99 234.514 114.492C227.256 74.4323 212.345 47.4735 196.453 35.3287C180.767 23.3375 162.349 24.3221 151.213 31.0774C132.089 42.6759 136.16 66.1346 147.513 77.8583"
             stroke="#000001"
-            stroke-width="2.84555"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.84555"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M190.147 41.5757C192.142 41.792 193.779 42.6799 195.056 44.2336C196.299 45.7986 196.812 47.5856 196.59 49.5889C196.368 51.5921 195.484 53.2198 193.933 54.4605C192.348 55.7125 190.557 56.2361 188.561 56.0141C186.549 55.7922 184.924 54.9044 183.681 53.3393C182.42 51.7914 181.901 50.01 182.118 48.001C182.341 45.992 183.236 44.3645 184.804 43.1067C186.355 41.8661 188.134 41.3538 190.147 41.5757Z"
@@ -202,17 +202,17 @@ const IconReserveTino: React.FC = () => {
           <path
             d="M183.104 50.6542C171.244 51.6786 162.041 51.1721 152.844 48.355"
             stroke="#000001"
-            stroke-width="2.84555"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.84555"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M182.897 50.6875C183.045 53.9883 181.733 55.673 179.869 55.5876C176.927 55.451 176.875 51.2283 176.875 51.2283C176.277 54.1819 174.976 55.8039 172.981 55.7641C170.985 55.7242 169.605 54.2616 169.383 51.1542C174.184 51.6835 178.711 51.4103 182.891 50.6875H182.897Z"
             fill="white"
             stroke="#000001"
-            stroke-width="2.84555"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.84555"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M194.395 91.8867C197.981 102.176 201.556 118.47 204.328 132.282C205.274 137 205.354 143.129 209.716 144.307C214.072 145.485 231.977 143.767 235.329 141.155C238.899 138.372 238.95 134.855 238.283 129.431C237.536 123.387 233.716 106.177 229.599 93.2525"
@@ -221,78 +221,78 @@ const IconReserveTino: React.FC = () => {
           <path
             d="M194.395 91.8867C197.981 102.176 201.556 118.47 204.328 132.282C205.274 137 205.354 143.129 209.716 144.307C214.072 145.485 231.977 143.767 235.329 141.155C238.899 138.372 238.95 134.855 238.283 129.431C237.536 123.387 233.716 106.177 229.599 93.2525"
             stroke="#000001"
-            stroke-width="2.84555"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.84555"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M182.999 45.9526C182.999 45.9526 177.208 44.6491 177.482 42.9645C177.756 41.28 182.599 39.9287 182.599 39.9287"
             stroke="#000001"
-            stroke-width="2.97623"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.97623"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M155 44.012C155 44.012 159.634 42.7977 159.389 41.1132C159.145 39.4287 155.233 38 155.233 38"
             stroke="#000001"
-            stroke-width="2.97623"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.97623"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M79.5946 66.6295C79.5946 66.6295 64.5071 81.6762 62.1684 88.978C62.1684 88.978 54.8225 85.6024 51.8062 85.333C48.7899 85.0637 46.3253 84.8961 43.1711 89.9176C40.0169 94.9391 37.0845 102.349 36.6108 106.485C36.1371 110.62 38.4158 114.265 45.2879 117.491C52.16 120.717 63.002 124.584 71.3313 124.135L78.5152 108.394L85.0755 78.1868L79.5946 66.6235V66.6295Z"
             fill="white"
             stroke="#000001"
-            stroke-width="2.99257"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.99257"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M62.168 88.9785L65.8679 90.3072"
             stroke="#000001"
-            stroke-width="2.99257"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.99257"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M169.208 108.399C170.977 115.808 182.509 138.905 200.996 161.684C204.72 166.275 205.662 170.452 199.863 173.936C194.064 177.419 169.454 179.023 155.938 167.585L169.208 108.393V108.399Z"
             fill="white"
             stroke="#000001"
-            stroke-width="2.99257"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.99257"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M132.461 28.4452C132.461 28.4452 137.174 22.9449 144.484 25.1474C151.866 27.3799 153.563 34.3167 152.4 38.7936C150.463 46.2331 141.966 47.1488 141.966 47.1488L132.461 28.4452Z"
             fill="#0A509D"
             stroke="#000001"
-            stroke-width="2.99257"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.99257"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M143.25 46.9345C143.25 46.9345 147.766 41.2665 154.991 43.4091C162.289 45.5698 164.106 52.6083 163.057 57.1749C161.312 64.7701 152.983 65.8294 152.983 65.8294L143.25 46.9345Z"
             fill="#0A509D"
             stroke="#000001"
-            stroke-width="2.99257"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.99257"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M152.996 67.4436C152.996 67.4436 157.512 61.7758 164.738 63.9184C172.035 66.0791 173.852 73.1176 172.803 77.6842C171.058 85.2794 162.729 86.3387 162.729 86.3387L152.996 67.4436Z"
             fill="#0A509D"
             stroke="#000001"
-            stroke-width="2.99257"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.99257"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M114.656 19.203C114.656 19.203 116.593 12.9006 123.741 12.0866C130.967 11.2667 135.111 16.432 135.836 20.5856C137.048 27.4925 132.676 29.659 132.676 29.659L114.662 19.1971L114.656 19.203Z"
             fill="#0A509D"
             stroke="#000001"
-            stroke-width="2.99257"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.99257"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M78.2985 71.7895C78.2985 71.7895 70.0112 95.2452 72.4638 125.524C74.7425 153.636 89.896 177.9 119.453 177.99C161.562 178.121 178.064 155.934 169.801 110.322C162.167 68.1925 146.486 39.8409 129.773 27.0686C113.277 14.458 93.9077 15.4934 82.1963 22.5978C62.0836 34.7954 66.3652 59.4661 78.3045 71.7955L78.2985 71.7895Z"
@@ -305,16 +305,16 @@ const IconReserveTino: React.FC = () => {
           <path
             d="M74.4596 87.3047C72.6966 96.9527 71.2334 110.389 72.4627 125.532C73.5061 138.43 77.296 150.825 83.9103 160.138"
             stroke="#000001"
-            stroke-width="2.99257"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.99257"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M173.447 119.054C171.864 116.487 170.275 112.949 169.801 110.322C162.167 68.1925 146.486 39.8409 129.773 27.0686C113.277 14.458 93.9077 15.4934 82.1963 22.5978C62.0836 34.7954 66.3652 59.4661 78.3045 71.7955"
             stroke="#000001"
-            stroke-width="2.99257"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.99257"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M123.142 33.6389C125.241 33.8663 126.962 34.8001 128.305 36.434C129.612 38.0799 130.152 39.9592 129.918 42.066C129.684 44.1727 128.755 45.8845 127.124 47.1893C125.457 48.506 123.574 49.0566 121.475 48.8232C119.358 48.5898 117.649 47.6561 116.342 46.0102C115.017 44.3823 114.471 42.5089 114.699 40.3961C114.933 38.2834 115.874 36.5717 117.523 35.249C119.154 33.9442 121.025 33.4055 123.142 33.6389Z"
@@ -335,17 +335,17 @@ const IconReserveTino: React.FC = () => {
           <path
             d="M115.738 43.1861C103.265 44.2634 93.5866 43.7307 83.9141 40.7681"
             stroke="#000001"
-            stroke-width="2.99257"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.99257"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M115.517 43.2202C115.673 46.6916 114.293 48.4633 112.332 48.3735C109.238 48.2298 109.184 43.7889 109.184 43.7889C108.555 46.8952 107.187 48.6009 105.089 48.559C102.99 48.5172 101.539 46.9789 101.305 43.711C106.354 44.2677 111.115 43.9803 115.511 43.2202H115.517Z"
             fill="white"
             stroke="#000001"
-            stroke-width="2.99257"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.99257"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M127.609 86.5493C131.381 97.3704 135.141 114.506 138.056 129.032C139.051 133.993 139.135 140.439 143.722 141.678C148.304 142.917 167.133 141.11 170.659 138.363C174.413 135.436 174.467 131.737 173.765 126.033C172.98 119.677 168.962 101.578 164.633 87.9857"
@@ -354,17 +354,17 @@ const IconReserveTino: React.FC = () => {
           <path
             d="M127.609 86.5493C131.381 97.3704 135.141 114.506 138.056 129.032C139.051 133.993 139.135 140.439 143.722 141.678C148.304 142.917 167.133 141.11 170.659 138.363C174.413 135.436 174.467 131.737 173.765 126.033C172.98 119.677 168.962 101.578 164.633 87.9857"
             stroke="#000001"
-            stroke-width="2.99257"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2.99257"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M35.5564 99.791C38.1246 104.711 38.2782 105.349 39.4176 106.454C40.557 107.559 41.9356 107.694 43.8729 106.803C45.8102 105.913 55.8512 100.601 57.5052 99.346C59.1591 98.0909 59.5102 97.093 58.6799 94.9457C57.8502 92.8018 48.059 71.4884 46.6016 69.4139C45.1442 67.3395 43.7024 66.9252 42.0357 67.7779C40.369 68.6307 29.8916 73.9718 27.7546 75.0686C25.9661 75.9874 24.5979 77.6789 25.9192 80.3979C27.1912 83.0125 33.8594 96.552 35.5531 99.7916L35.5564 99.791Z"
             fill="#282828"
             stroke="#000001"
-            stroke-width="3.4749"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="3.4749"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </g>
         <defs>
