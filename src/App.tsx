@@ -65,6 +65,8 @@ const App: React.FC = () => {
 
         {/* mobile */}
         <Route path="/mobile" element={<MobileLayout />}>
+          <Route path="login" element={<MobileLogin />} />
+          <Route path="" element={<MobileMain />} />
         </Route>
       </Routes>
     </BrowserRouter>
