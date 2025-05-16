@@ -20,6 +20,8 @@ import { useTableStatusOrder } from './stores/orders/tableStatusOrder';
 import BoothEditPage from './pages/booths/BoothEditPage';
 import ModalPage from './pages/modals/ModalPage';
 import AppInitializer from './components/AppInitializer';
+import MobileLogin from './pages/mobiles/MobileLoginPage';
+import MobileMain from './pages/mobiles/MobileMainPage';
 
 const App: React.FC = () => {
   return (
