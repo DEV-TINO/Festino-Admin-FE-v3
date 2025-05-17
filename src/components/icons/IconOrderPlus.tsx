@@ -5,7 +5,7 @@ const IconOrderPlus: React.FC<IconOrderPlusProps> = ({ onClick, className = '' }
   return (
     <div 
       className={`${className}`}
-      onClick={() => onClick}
+      onClick={onClick}
     >
       <svg
         width="16"

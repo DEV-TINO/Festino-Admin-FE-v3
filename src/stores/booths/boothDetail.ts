@@ -127,7 +127,7 @@ export const useBoothDetail = create<BoothDetailState>((set, get) => ({
           originalMenuList: JSON.parse(JSON.stringify(menuRes.data.data)),
         });
 
-        if (boothRes.data.boothInfo?.isOrder) {
+        if (boothRes.data.data?.isOrder) {
           const { getTableList } = useTableDetail.getState();
           await getTableList(boothId);
         }
@@ -147,7 +147,7 @@ export const useBoothDetail = create<BoothDetailState>((set, get) => ({
     try {
       const res = await api.get(`/admin/booth/night/${boothId}`);
       if (res.data.success) {
-        set({ boothInfo: res.data.boothInfo });
+        set({ boothInfo: res.data.data });
         return true;
       } else {
         alertError(res.data.message);

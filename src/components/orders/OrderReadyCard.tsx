@@ -28,12 +28,12 @@ const OrderReadyCard: React.FC<OrderReadyCardProps> = (props) => {
 
   return (
     <div className="w-full min-w-[350px] h-[400px] flex flex-col justify-between outline outline-1 outline-danger-50 rounded-3xl max-w-[500px]">
-      <div className="flex justify-between w-full h-[65px] items-center px-[28px] text-[13px] font-semibold bg-danger-50 rounded-t-3xl border-b border-secondary-100 flex-wrap gap-x-2">
+      <div className="flex justify-between w-full h-[65px] items-center px-[21px] text-[13px] font-semibold bg-danger-50 rounded-t-3xl border-b border-secondary-100 flex-wrap gap-x-2">
         <div>No.{props.orderNum}</div>
         <div>{getCustomTableNum(props.tableNum)}번</div>
         <div>{props.userName}</div>
         <div>{prettyPhoneNumber(props.phoneNum)}</div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <IconClock />
           <div>{getHourandMinute(props.createAt)}</div>
         </div>

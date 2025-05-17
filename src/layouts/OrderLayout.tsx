@@ -9,6 +9,7 @@ import { useDate } from "@/stores/commons/date";
 import { useServiceModal } from "@/stores/orders/serviceModal";
 import { useDepositOrder } from "@/stores/orders/depositOrder";
 import { WaitDepositOrder } from "@/types/orders/order.types";
+import IconOrder from "@/components/icons/IconOrder";
 
 const OrderLayout: React.FC = () => {
   const navigate = useNavigate();
@@ -144,7 +145,7 @@ const sortedOrderList = useMemo(() => {
       {/* 상단 헤더 */}
       <div className="flex justify-between pt-[50px] lg:pt-[100px] min-w-[670px] gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-8 h-8 bg-cover bg-order-icon" />
+          <IconOrder />
           <div className="text-primary-800 text-xl md:text-2xl font-semibold">주문 조회</div>
         </div>
       </div>

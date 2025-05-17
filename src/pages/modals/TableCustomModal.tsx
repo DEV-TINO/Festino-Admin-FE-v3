@@ -104,8 +104,8 @@ const TableCustomModal: React.FC = () => {
       <div className="w-full flex justify-between items-center text-xl font-semibold text-primary-800 h-9">
         <div className="w-[25px]" />
         테이블 커스텀
-        <div onClick={closeTableDetailModal} className="items-center justify-center flex w-8 h-8 p-2 cursor-pointer hover:bg-gray-100 rounded-2xl">
-          <IconClose />
+        <div className="items-center justify-center flex w-8 h-8 p-2 cursor-pointer hover:bg-gray-100 rounded-2xl">
+          <IconClose onClick={closeTableDetailModal} />
         </div>
       </div>
 

@@ -39,7 +39,7 @@ const TablingPage: React.FC = () => {
 
   const { boothList, setBoothList, getAllBoothList } = useBoothList();
   const { openBoothReservePopup, openPopup } = useReservePopupStore();
-  const { reserveList, getReserveList, deleteReserve, confirmReserve, restoreReserve, getFilteredReserveList} = useReserveListStore();
+  const { searchKeyword, setSearchKeyword, reserveList, getReserveList, deleteReserve, confirmReserve, restoreReserve, getFilteredReserveList} = useReserveListStore();
   const { openMessageModal, openMessageCustomModal } = useMessageModalStore();
   const { getNightBoothInfo } = useBoothDetail();
   const { getMessage } = useMessageStore();
@@ -372,7 +372,8 @@ const TablingPage: React.FC = () => {
               type="search"
               className="peer block w-full p-3 ps-10 text-xs text-gray-900 border border-gray-300 rounded-xl bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
               placeholder="예약 검색(예약자, 전화번호...)"
-              v-model="searchKeyword"
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
             />
             <button
               type="button"

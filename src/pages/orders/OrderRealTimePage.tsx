@@ -5,7 +5,7 @@ import { useFinishOrder } from '@/stores/orders/finishOrder';
 import { useTableStatusOrder } from '@/stores/orders/tableStatusOrder';
 import { useDate } from '@/stores/commons/date';
 import IconNotFound from '@/components/icons/IconNotFound';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import OrderCard from '@/components/orders/OrderCard';
 import { WaitDepositOrder } from '@/types/orders/order.types';
 
@@ -13,9 +13,9 @@ const OrderRealTimePage: React.FC = () => {
   const { boothId } = useTableStatusOrder();
   const { nowDate } = useDate();
 
-  const { cookingList, getCookingOrderList, initCookingOrderList } = useCookingOrder();
-  const { waitDepositList, getWaitDepositOrderList, initWaitDepositOrderList } = useDepositOrder();
-  const { finishList, getFinishOrderList, initFinishOrderList } = useFinishOrder();
+  const { cookingList, getCookingOrderList } = useCookingOrder();
+  const { waitDepositList, getWaitDepositOrderList } = useDepositOrder();
+  const { finishList, getFinishOrderList } = useFinishOrder();
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -31,33 +31,36 @@ const OrderRealTimePage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!boothId) return;
+    if (!boothId || !nowDate) return;
     getAllOrderList();
-  }, [boothId]);
-
+  }, [boothId, nowDate]);
+  
   useEffect(() => {
-    if (prevWaitDepositList.length < waitDepositList.length) {
+    if (!boothId) return;
+  
+    const isNew = !isEqual(prevWaitDepositList, waitDepositList);
+  
+    if (isNew) {
       setPrevWaitDepositList(cloneDeep(waitDepositList));
-      if (isFirstLoad) {
-        setIsFirstLoad(false);
-      } else {
+      if (!isFirstLoad) {
         setIsNewWaitDepositExist(true);
+      } else {
+        setIsFirstLoad(false);
       }
     }
-  }, [waitDepositList]);
-
+  }, [waitDepositList, boothId]);
+  
   useEffect(() => {
-    initWaitDepositOrderList();
-    initCookingOrderList();
-    initFinishOrderList();
+    if (!boothId || !nowDate) return;
+  
     intervalRef.current = setInterval(() => {
-      if (boothId) getAllOrderList();
+      getAllOrderList();
     }, 3000);
-
+  
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, []);
+  }, [boothId, nowDate]);
 
   const renderCardSection = (title: string, type: string, data: any[]) => {
     const bgMap: Record<string, string> = {
@@ -93,7 +96,7 @@ const OrderRealTimePage: React.FC = () => {
             <div className="text-sm text-danger pl-5">새로운 입금 대기가 들어왔어요!</div>
           )}
         </div>
-        <div className={`min-w-full flex 3xl:flex-col rounded-xl ${bgMap[type]} gap-[40px] py-[30px] px-[20px] 3xl:justify-center 3xl:items-center overflow-x-auto 3xl:w-[420px]`}>
+        <div className={`min-w-full flex 3xl:flex-col rounded-xl ${bgMap[type]} gap-[40px] py-[30px] px-[15px] 3xl:justify-center 3xl:items-center overflow-x-auto 3xl:w-[420px]`}>
           {data.length > 0 ? (
             data.map((order, index) => (
               <OrderCard key={index} type={type} cardData={order} />

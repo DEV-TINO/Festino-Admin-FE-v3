@@ -18,7 +18,7 @@ import { MenuItem, OrderItem, TableItem } from '@/types/modals/modal.types';
 const ServiceOrderModal: React.FC = () => {
   const { closeModal } = useBaseModal();
   const { getMenuList, saveService, memo, setMemo, menuList } = useServiceModal();
-  const { tableNumList } = useTableDetail();
+  const { tableNumList, getTableList } = useTableDetail();
 
   const [isService, setIsService] = useState(true);
   const [selectedTables, setSelectedTables] = useState<TableItem[]>([]);
@@ -41,6 +41,7 @@ const ServiceOrderModal: React.FC = () => {
       setBoothId(cookies.boothId);
     }
     getMenuList();
+    getTableList(boothId);
   }, [boothId, cookies.boothId]);
 
   // 선택한 테이블 번호/메뉴 전체 삭제
@@ -51,17 +52,31 @@ const ServiceOrderModal: React.FC = () => {
 
   // 테이블 선택
   const selectTable = (tableNumIndex: number, customTableNum: string) => {
-    const index = selectedTables.findIndex((table) => table.tableNumIndex === tableNumIndex);
-    if (index === -1) selectedTables.push({ tableNumIndex, customTableNum });
-    else selectedTables.splice(index, 1);
+    setSelectedTables((prev) => {
+      const next = [...prev];
+      const index = next.findIndex((table) => table.tableNumIndex === tableNumIndex);
+      if (index === -1) {
+        next.push({ tableNumIndex, customTableNum });
+      } else {
+        next.splice(index, 1);
+      }
+      return next;
+    });
   };
 
   // 메뉴 선택
   const selectMenus = (menu: MenuItem) => {
-    const index = selectedMenus.indexOf(menu);
-    if (index === -1) selectedMenus.push(menu);
-    else selectedMenus.splice(index, 1);
-  };
+    setSelectedMenus((prev) => {
+      const next = [...prev];
+      const index = next.indexOf(menu);
+      if (index === -1) {
+        next.push(menu);
+      } else {
+        next.splice(index, 1);
+      }
+      return next;
+    });
+  };  
 
   // toggle 상태 관리
   const toggleDropdown = (type: string) => {
@@ -80,44 +95,50 @@ const ServiceOrderModal: React.FC = () => {
       alert('테이블 번호와 메뉴를 선택해 주세요.');
       return;
     }
-
+  
+    // 새로운 orderList를 생성
+    const newOrderList = { ...orderList };
+    let newTotal = totalPrice;
+  
     selectedTables.forEach((table) => {
+      const tableIndex = table.tableNumIndex;
+      const currentOrders = newOrderList[tableIndex] ? [...newOrderList[tableIndex]] : [];
+  
       selectedMenus.forEach((menu) => {
-        // 서비스이면 가격 0원으로 적용
         const price = isService ? 0 : menu.menuPrice;
-
-        const currentTableOrders = orderList[table.tableNumIndex] || [];
-
-        const existingOrder = currentTableOrders.find((order) => {
-          order.menuId === menu.menuId && order.menuPrice === price;
-        });
-
+  
+        const existingOrder = currentOrders.find(
+          (order) => order.menuId === menu.menuId && order.menuPrice === price
+        );
+  
         if (existingOrder) {
           existingOrder.menuCount += 1;
         } else {
-          currentTableOrders.push({
+          currentOrders.push({
             menuId: menu.menuId,
             menuName: menu.menuName,
             menuCount: 1,
             menuPrice: price,
-            isService: isService
+            isService,
           });
         }
-
-        orderList[table.tableNumIndex] = currentTableOrders;
-
-        const total = totalPrice + price;
-
-        setTotalPrice(total);
+  
+        newTotal += price;
       });
+  
+      newOrderList[tableIndex] = currentOrders;
     });
+  
+    setOrderList(newOrderList);
+    setTotalPrice(newTotal);
   };
-
+  
   // 커스텀된 테이블 정보 가져오기
   const getTableCustomNum = (tableNum: string) => {
-    const tableInfo = tableNumList.find((table) => table.tableNumIndex === Number(tableNum));
-    return tableInfo?.customTableNum;
-  };
+    const index = Number(tableNum);
+    const tableInfo = tableNumList.find((table) => table.tableNumIndex === index);
+    return tableInfo?.customTableNum ?? index;
+  };  
 
   // 테이블 총 금액
   const getTableTotalPrice = (orders: OrderItem[]) => {
@@ -126,52 +147,72 @@ const ServiceOrderModal: React.FC = () => {
 
   // 메뉴 수량 감소
   const handleClickMenuMinus = (tableNum: string, menu: MenuItem) => {
-    const findOrder = orderList[Number(tableNum)]?.find(
-      (order) => order.menuId && order.menuPrice === menu.menuPrice
+    console.log('click minus')
+    const tableIndex = Number(tableNum);
+    const currentOrders = [...(orderList[tableIndex] || [])];
+  
+    const orderIndex = currentOrders.findIndex(
+      (order) => order.menuId === menu.menuId && order.menuPrice === menu.menuPrice
     );
-
-    if(!findOrder || findOrder.menuCount === 0) return;
-
-    if(findOrder.menuCount > 0) {
-      findOrder.menuCount -= 1;
-      
-      const total = totalPrice - findOrder.menuPrice;
-      setTotalPrice(total);
-    }
-  };
+  
+    if (orderIndex === -1 || currentOrders[orderIndex].menuCount <= 0) return;
+  
+    const newOrders = [...currentOrders];
+    const targetOrder = { ...newOrders[orderIndex] };
+    targetOrder.menuCount -= 1;
+    newOrders[orderIndex] = targetOrder;
+  
+    setOrderList((prev) => ({ ...prev, [tableIndex]: newOrders }));
+    setTotalPrice((prev) => prev - targetOrder.menuPrice);
+  };  
 
   // 메뉴 수량 증가
   const handleClickMenuPlus = (tableNum: string, menu: MenuItem) => {
-    const findOrder = orderList[Number(tableNum)]?.find(
-      (order) => order.menuId && order.menuPrice === menu.menuPrice
+    console.log('click plus')
+    const tableIndex = Number(tableNum);
+    const currentOrders = [...(orderList[tableIndex] || [])];
+  
+    const orderIndex = currentOrders.findIndex(
+      (order) => order.menuId === menu.menuId && order.menuPrice === menu.menuPrice
     );
-
-    if(!findOrder || findOrder.menuCount === 99) return;
-
-    if(findOrder.menuCount < 99) {
-      findOrder.menuCount += 1;
-      
-      const total = totalPrice + findOrder.menuPrice;
-      setTotalPrice(total);
-    }
-  };
+  
+    if (orderIndex === -1 || currentOrders[orderIndex].menuCount >= 99) return;
+  
+    const newOrders = [...currentOrders];
+    const targetOrder = { ...newOrders[orderIndex] };
+    targetOrder.menuCount += 1;
+    newOrders[orderIndex] = targetOrder;
+  
+    setOrderList((prev) => ({ ...prev, [tableIndex]: newOrders }));
+    setTotalPrice((prev) => prev + targetOrder.menuPrice);
+  };  
 
   // 주문 삭제
   const handleClickDeleteOrder = (tableNum: string, menu: MenuItem) => {
-    const orders = orderList[Number(tableNum)];
-    if (!orders) return;
-
-    const orderIndex = orders.findIndex((order) => order.menuId === menu.menuId && order.menuPrice === menu.menuPrice);
+    console.log('click delete')
+    const tableIndex = Number(tableNum);
+    const currentOrders = [...(orderList[tableIndex] || [])];
+  
+    const orderIndex = currentOrders.findIndex(
+      (order) => order.menuId === menu.menuId && order.menuPrice === menu.menuPrice
+    );
+  
     if (orderIndex === -1) return;
-
-    const total = totalPrice - orders[orderIndex].menuPrice * orders[orderIndex].menuCount;
-    setTotalPrice(total);
-    orders.splice(orderIndex, 1);
-
-    if (orders.length === 0) {
-      delete orderList[Number(tableNum)];
+  
+    const removedOrder = currentOrders[orderIndex];
+    const newOrders = [...currentOrders];
+    newOrders.splice(orderIndex, 1);
+  
+    const newOrderList = { ...orderList };
+    if (newOrders.length === 0) {
+      delete newOrderList[tableIndex];
+    } else {
+      newOrderList[tableIndex] = newOrders;
     }
-  };
+  
+    setOrderList(newOrderList);
+    setTotalPrice((prev) => prev - removedOrder.menuPrice * removedOrder.menuCount);
+  };  
 
   const handleClickSaveButton = () => {
     if(Object.keys(orderList).length === 0) {
@@ -195,7 +236,7 @@ const ServiceOrderModal: React.FC = () => {
 
   return (
     <>
-      <div className="min-w-[730px] h-fit flex flex-col justify-start items-center bg-white rounded-2xl px-[60px] py-[50px] gap-5 max-h-full overflow-auto">
+      <div className="min-w-[750px] h-fit max-h-[880px] flex flex-col justify-start items-center bg-white rounded-2xl px-[40px] py-[40px] gap-5 overflow-y-auto">
         <div className="w-full flex justify-between items-center gap-5 shrink-0 font-semibold text-xl text-primary-800 h-9">
           <div className="w-[18px] h-[18px] p-1"></div>
           주문 추가
@@ -269,7 +310,7 @@ const ServiceOrderModal: React.FC = () => {
                   onChange={(e) => setSearchTable(e.target.value)}
                 />
               </div>
-              <ul className="py-2 text-xs" aria-labelledby="dropdownSearchButton">
+              <ul className="py-2 text-xs max-h-[120px] overflow-y-auto" aria-labelledby="dropdownSearchButton">
                 {filteredTableList.map((table) => (
                   <li
                     key={table.tableNumIndex}
@@ -305,7 +346,7 @@ const ServiceOrderModal: React.FC = () => {
                 {selectedTables.map((table) => 
                   <div
                     key={table.tableNumIndex}
-                    className="is-button is-outlined px-[15px] text-base flex items-center place-items-center gap-1 h-[28px] flex-shrink-0"
+                    className="is-button is-outlined px-[12px] text-sm flex items-center place-items-center gap-1 h-[28px] flex-shrink-0"
                   >
                     {table.customTableNum}
                     <IconDelete
@@ -353,7 +394,7 @@ const ServiceOrderModal: React.FC = () => {
                   onChange={(e) => setSearchMenu(e.target.value)}
                 />
               </div>
-              <ul className="py-2 text-xs" aria-labelledby="dropdownSearchButton">
+              <ul className="py-2 text-xs max-h-[120px] overflow-y-auto" aria-labelledby="dropdownSearchButton">
                 {filteredMenuList.map((menu) => (
                   <li
                     key={menu.menuId}
@@ -387,7 +428,7 @@ const ServiceOrderModal: React.FC = () => {
                 {selectedMenus.map((menu) => (
                   <div
                     key={menu.menuId}
-                    className="is-button is-outlined px-[15px] text-base flex items-center place-items-center gap-1 h-[28px] flex-shrink-0"
+                    className="is-button is-outlined px-[12px] text-sm flex items-center place-items-center gap-1 h-[28px] flex-shrink-0"
                   >
                     {menu.menuName}
                     <IconDelete 
@@ -412,21 +453,21 @@ const ServiceOrderModal: React.FC = () => {
 
           {/* 주문 목록 */}
           <div className="flex flex-col w-full gap-1">
-            <div className="text-md font-medium">주문 목록</div>
+            <div className="text-sm font-semibold pl-2">주문 목록</div>
 
             <div className="w-full bg-primary-800-light border border-primary-700 rounded-xl text-secondary-700-light">
               {Object.entries(orderList).map(([tableNum, orders], index) => (
                 <div key={tableNum}>
                   <div
-                    className={`flex justify-between border-primary-200 font-semibold px-3 h-10 items-center border-b ${
+                    className={`flex justify-between bg-primary-800-light-8 first:rounded-t-xl border-primary-200 font-semibold px-3 h-10 items-center border-b ${
                       index === 0 ? "" : "border-t"
                     }`}
                   >
-                    <div className="text-left">{getTableCustomNum(tableNum)}번 테이블</div>
-                    <div className="text-right">총 가격 : {getTableTotalPrice(orders)}</div>
+                    <div className="text-left text-sm">{getTableCustomNum(tableNum)}번 테이블</div>
+                    <div className="text-right text-sm">총 가격 : {getTableTotalPrice(orders)}</div>
                   </div>
 
-                  <div className="grid grid-cols-2 bg-white">
+                  <div className="grid grid-cols-2 bg-white text-sm">
                     {orders.map((order, orderIndex) => {
                       const isLastRow =
                         Math.ceil((orderIndex + 1) / 2) === Math.ceil(orders.length / 2);
@@ -466,7 +507,9 @@ const ServiceOrderModal: React.FC = () => {
                 </div>
               ))}
               {/* 총 금액 */}
-              <div className="flex justify-between h-[51px] items-center font-semibold px-4">
+              <div
+                className={`w-full flex justify-between h-[40px] items-center font-semibold px-4`}
+              >
                 <div className="text-left text-primary-800">총 가격</div>
                 <div className="text-right text-primary-800">{prettyPrice(totalPrice)}</div>
               </div>
@@ -475,12 +518,12 @@ const ServiceOrderModal: React.FC = () => {
 
           {/* 메모 */}
           <div className="w-full flex flex-col gap-1 px-1">
-            <div className="w-full text-md">메모</div>
+            <div className="w-full text-sm pl-2 font-semibold">메모</div>
             <textarea
               maxLength={50}
               value={memo}
               placeholder="메모를 작성해주세요"
-              className="w-full h-[70px] resize-none text-sm rounded-xl p-[14px] border-secondary-150 border-1"
+              className="w-full h-[50px] resize-none text-sm rounded-xl p-[14px] border-secondary-150 border-1"
               onChange={(e) => setMemo(e.target.value)}
             />
           </div>

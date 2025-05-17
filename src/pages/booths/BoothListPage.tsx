@@ -4,6 +4,7 @@ import { useBoothList } from "@/stores/booths/boothList";
 import { Booth } from "@/types/booths/booth.types";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "@/stores/logins/userStore";
+import IconBoothList from "@/components/icons/IconBoothList";
 
 const BoothListPage: React.FC = () => {
   const {
@@ -50,7 +51,7 @@ const BoothListPage: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center pt-[100px] min-w-[350px]">
         <div className="flex items-center gap-4">
-          <div className="bg-booth-list bg-cover w-8 h-8" />
+          <IconBoothList />
           <div className="text-primary-800 text-xl md:text-2xl font-semibold">부스 리스트</div>
         </div>
         <button className="hover:bg-primary-800 font-semibold w-[60px] h-[35px] rounded-xl text-sm text-white bg-primary-800 cursor-pointer">

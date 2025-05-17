@@ -1,4 +1,3 @@
-// components/icons/IconNotice.tsx
 import React from 'react';
 
 interface IconNoticeProps {

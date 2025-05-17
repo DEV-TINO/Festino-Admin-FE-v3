@@ -39,17 +39,17 @@ export interface IconSearchProps {
 
 export interface IconOrderMinusProps {
   className?: string;
-  onClick?: (tableNum: string, order: OrderItem) => void;
+  onClick?: () => void;
 }
 
 export interface IconOrderPlusProps {
   className?: string;
-  onClick?: (tableNum: string, order: OrderItem) => void;
+  onClick?: () => void;
 }
 
 export interface IconTrashProps {
   className?: string;
-  onClick?: (tableNum: string, order: OrderItem) => void;
+  onClick?: () => void;
 }
 
 export interface IconCloseProps {

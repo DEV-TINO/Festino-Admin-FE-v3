@@ -31,7 +31,7 @@ export interface BoothRowProps {
 }
 
 export interface BoothListState {
-  boothList: Booth[];
+  boothList: BoothInfo[];
   getAllBoothList: () => Promise<Booth[]>;
   setBoothList: (boothList: Booth[]) => void;
   updateBoothOpen: (args: { boothId: string; isOpen: boolean; adminCategory: string }) => Promise<void>;

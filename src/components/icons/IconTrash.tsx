@@ -5,7 +5,7 @@ const IconTrash: React.FC<IconTrashProps> = ({ onClick, className = '' }) => {
   return (
     <div 
       className={`${className}`}
-      onClick={() => onClick}
+      onClick={onClick}
     >
       <svg
         width="16"

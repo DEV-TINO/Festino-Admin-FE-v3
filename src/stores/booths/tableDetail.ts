@@ -30,7 +30,6 @@ export const useTableDetail = create<TableDetailState>()((set, get) => ({
         alertError(res.data.message);
       }
     } catch (error) {
-      console.error(error);
       alertError(error);
     }
   },
