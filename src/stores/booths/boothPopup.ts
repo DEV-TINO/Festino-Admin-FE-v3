@@ -1,4 +1,3 @@
-// stores/boothPopup.ts
 import { create } from 'zustand';
 import { useBoothList } from './boothList';
 import { alertError } from '@/utils/api';

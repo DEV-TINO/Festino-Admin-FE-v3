@@ -2,11 +2,17 @@ import { create } from 'zustand';
 import { alertError, api } from '@/utils/api';
 import { useBaseModal } from '../commons/baseModal';
 import { useMessageModalStore } from './messageModal';
+import { useReserveModalStore } from './reserveModalStore';
 import { useBoothDetail } from '../booths/boothDetail';
 
 interface CustomMessage {
   message: string;
   messageType: number;
+}
+
+interface ReserveData {
+  phoneNum: string;
+  userName: string;
 }
 
 interface MessageStore {
@@ -15,6 +21,7 @@ interface MessageStore {
   setMessage: (value: string) => void;
   getMessage: (boothId: string) => Promise<void>;
   sendMessage: (message: string) => Promise<void>;
+  sendMobileMessage: (message: string, data: ReserveData) => Promise<void>;
   saveCustomMessage: (messages: CustomMessage[]) => Promise<void>;
 }
 
@@ -90,6 +97,36 @@ export const useMessageStore = create<MessageStore>((set) => ({
       alert(error);
     } finally {
       baseModal.closeModal();
+    }
+  },
+
+  sendMobileMessage: async (message, data) => {
+    const { selectedBooth, closeMobilePopup, openLoadingModal } = useReserveModalStore.getState();
+
+    if (!data.phoneNum || !data.userName || !selectedBooth?.adminName) {
+      return alertError('메시지 전송에 실패했습니다.');
+    }
+
+    openLoadingModal();
+
+    try {
+      const response = await api.post('/admin/message/send', {
+        phoneNum: data.phoneNum,
+        userName: data.userName,
+        adminName: selectedBooth.adminName,
+        message,
+      });
+
+      if (response.data === 'SEND_SUCCESS') {
+        alert('메시지 전송에 성공했습니다.');
+      } else {
+        alert('메시지 전송에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error(error);
+      alertError(error);
+    } finally {
+      closeMobilePopup();
     }
   },
 

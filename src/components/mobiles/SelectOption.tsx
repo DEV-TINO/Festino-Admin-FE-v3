@@ -45,8 +45,7 @@ const SelectOption: React.FC<SelectOptionProps> = ({ value, onChange }) => {
           사용 동의
         </div>
       </div>
-
-      {/* 사용 비동의 */}
+      
       <div
         onClick={() => handleClickOption(false)}
         className="w-fit h-fit flex items-center pl-10 cursor-pointer"
