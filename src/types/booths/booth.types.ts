@@ -114,6 +114,7 @@ export interface TableDetailState {
   tableNumList: TableItem[];
   tableNum: number;
 
+  openMobileTableDetailModal: () => void;
   openTableDetailModal: () => void;
   closeTableDetailModal: () => void;
   getTableList: (boothId: string) => Promise<void>;

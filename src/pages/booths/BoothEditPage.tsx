@@ -577,12 +577,13 @@ const BoothEditPage: React.FC = () => {
                     현재 테이블 개수
                     <span className="text-secondary-700">{tableNum}개</span>
                   </div>
-                  <div
+                  <button
+                    type="button"
                     onClick={() => handleClickTableCustom()}
                     className="is-button font-semibold w-[100px] h-[35px] rounded-xl text-sm flex items-center justify-center text-white lg:text-md bg-primary-800 cursor-pointer select-none"
                   >
                     테이블 커스텀
-                  </div>
+                  </button>
                 </div>
                 <div className="grid 3xl:grid-cols-4 2xl:grid-cols-3 grid-cols-2 gap-5 place-items-center">
                   {tableNumList.map((table, tableIndex) => (

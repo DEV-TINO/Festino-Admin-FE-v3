@@ -13,6 +13,12 @@ export const useTableDetail = create<TableDetailState>()((set, get) => ({
     baseModal.setModalType('tableModal');
   },
 
+  openMobileTableDetailModal: () => {
+    const baseModal = useBaseModal.getState();
+    baseModal.openMobileModal();
+    baseModal.setModalType('customTable');
+  },
+
   closeTableDetailModal: () => {
     const baseModal = useBaseModal.getState();
     baseModal.closeModal();

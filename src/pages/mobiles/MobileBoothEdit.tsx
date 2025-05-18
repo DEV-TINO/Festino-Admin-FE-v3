@@ -15,7 +15,7 @@ const BoothEditPage: React.FC = () => {
   const navigate = useNavigate();
   const { boothId } = useParams<{ boothId: string }>();
 
-  const { tableNum, tableNumList, openTableDetailModal, submitTableDetail } = useTableDetail();
+  const { tableNum, tableNumList, openMobileTableDetailModal, submitTableDetail } = useTableDetail();
   const { setBoothInfo, boothInfo, menuList, createMenuList, deleteMenuList, boothType, patchMenuList, originalMenuList, addDeleteMenu, addPatchMenu, updateMenuList, init, reset, deleteMenu, createMenu, patchMenu  } = useBoothDetail();
   const { openMobileModal } = useMenuModal();
   const [selectedMenuIndex, setSelectedMenuIndex] = useState<number>(-1);
@@ -37,30 +37,7 @@ const BoothEditPage: React.FC = () => {
     } else return '';
   };
   const handleClickTableCustom = () => {
-    openTableDetailModal();
-  };
-
-  const handleDragStartMenu = (event: React.DragEvent<HTMLDivElement>, index: number) => {
-    if (isSubmit) return;
-    event.dataTransfer.setData("text/plain", index.toString());
-  };
-
-  const handleDropMenu = (event: React.DragEvent<HTMLDivElement>, dropIndex: number) => {
-    if (isSubmit) return;
-
-    const dragIndex = parseInt(event.dataTransfer.getData("text/plain"), 10);
-    const item = menuList.splice(dragIndex, 1)[0];
-    menuList.splice(dropIndex, 0, item);
-
-    const start = Math.min(dragIndex, dropIndex);
-    const end = Math.max(dragIndex, dropIndex);
-
-    menuList.slice(start, end + 1).forEach((menuItem, index) => {
-      menuItem.menuIndex = start + index;
-      addPatchMenu({
-        ...menuItem,
-      });
-    });
+    openMobileTableDetailModal();
   };
 
   const setBackgroundImage = (url: string): React.CSSProperties => {
@@ -99,26 +76,6 @@ const BoothEditPage: React.FC = () => {
     }
   };
 
-  const handleDragStart = (event: React.DragEvent<HTMLDivElement>, index: number) => {
-    if (isSubmit) return;
-    event.dataTransfer.setData('text/plain', String(index));
-  };
-
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>, dropIndex: number) => {
-    if (isSubmit) return;
-    const dragIndex = Number(event.dataTransfer.getData('text/plain'));
-    const updated = [...fileUrls];
-    const item = updated.splice(dragIndex, 1)[0];
-    updated.splice(dropIndex, 0, item);
-    setFileUrls(updated);
-  };
-
-  const handleInputAdminCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    if (isSubmit) return;
-    const current = useBoothDetail.getState().boothInfo;
-    setBoothInfo({ ...current, adminCategory: event.target.value });
-  };
-
   const handleInputBoothName = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (isSubmit) return;
     const current = useBoothDetail.getState().boothInfo;
@@ -129,12 +86,6 @@ const BoothEditPage: React.FC = () => {
     if (isSubmit) return;
     const current = useBoothDetail.getState().boothInfo;
     setBoothInfo({ ...current, boothIntro: event.target.value });
-  };
-
-  const handleInputAdminName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (isSubmit) return;
-    const current = useBoothDetail.getState().boothInfo;
-    setBoothInfo({ ...current, adminName: event.target.value });
   };
 
   const handleInputAccountHolder = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -590,6 +541,7 @@ const BoothEditPage: React.FC = () => {
                   </div>
                   <div className="flex justify-end pt-2.5">
                     <button
+                      type="button"
                       className="bg-primary-800 text-white px-6 py-2 rounded-xl font-semibold"
                       onClick={() => handleClickTableCustom()}
                     >
