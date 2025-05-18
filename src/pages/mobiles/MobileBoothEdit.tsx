@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import IconBoothEdit from '@/components/icons/IconBoothEdit';
 import IconBoothListToggle from '@/components/icons/IconBoothListToggle';
 import IconFileUpload from '@/components/icons/IconFileUpload';
 import IconAdd from '@/components/icons/IconAdd';
 import IconRadio from '@/components/icons/IconRadio';
-import { prettyPrice } from '@/utils/utils';
 import { ADMIN_CATEGORY, MENU_TYPE } from '@/constants/constant';
 import { alertError, api, imagesUpload } from '@/utils/api';
 import { useBoothDetail } from '@/stores/booths/boothDetail';
 import { useTableDetail } from '@/stores/booths/tableDetail';
 import { useMenuModal } from '@/stores/booths/menuModal';
+import IconDelete from '@/components/icons/IconDelete';
 
 const BoothEditPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,8 +17,9 @@ const BoothEditPage: React.FC = () => {
 
   const { tableNum, tableNumList, openTableDetailModal, submitTableDetail } = useTableDetail();
   const { setBoothInfo, boothInfo, menuList, createMenuList, deleteMenuList, boothType, patchMenuList, originalMenuList, addDeleteMenu, addPatchMenu, updateMenuList, init, reset, deleteMenu, createMenu, patchMenu  } = useBoothDetail();
-  const { openMenuModal } = useMenuModal();
-
+  const { openMobileModal } = useMenuModal();
+  const [selectedMenuIndex, setSelectedMenuIndex] = useState<number>(-1);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number>(-1);
   const [serviceHours, setServiceHours] = useState('');
   const [fileUrls, setFileUrls] = useState<string[]>([]);
   const [isSubmit, setIsSubmit] = useState(false);
@@ -30,6 +30,12 @@ const BoothEditPage: React.FC = () => {
   const [useOrder, setUseOrder] = useState(false);
   const [isCall, setIsCall] = useState(false);
 
+  const isSelectedImage = (index) => {
+    if (selectedImageIndex !== -1) {
+      if (index === selectedImageIndex) return 'border-primary-800';
+      else return '';
+    } else return '';
+  };
   const handleClickTableCustom = () => {
     openTableDetailModal();
   };
@@ -348,7 +354,68 @@ const BoothEditPage: React.FC = () => {
     }
   
     setIsSubmit(false);
-    navigate(`/booth/${newBoothId}`);
+    navigate(`/mobile`);
+  };
+
+  const handleSelectImage = (index: number) => {
+    if (selectedImageIndex === index) {
+      setSelectedImageIndex(-1);
+      return;
+    }
+
+    if (selectedImageIndex === -1) {
+      setSelectedImageIndex(index);
+    } else {
+      const updatedUrls = [...fileUrls];
+      const temp = updatedUrls[index];
+      updatedUrls[index] = updatedUrls[selectedImageIndex];
+      updatedUrls[selectedImageIndex] = temp;
+      setFileUrls(updatedUrls);
+      setSelectedImageIndex(-1);
+    }
+  };
+
+  const handleDeleteImage = (id: number) => {
+    const updatedUrls = fileUrls.filter((_, index) => index !== id);
+    setFileUrls(updatedUrls);
+    if (selectedImageIndex === id) {
+      setSelectedImageIndex(-1);
+    }
+  };
+
+  const handleSelectMenu = (index: number) => {
+    if (selectedMenuIndex === index) {
+      setSelectedMenuIndex(-1);
+      return;
+    }
+
+    if (selectedMenuIndex === -1) {
+      setSelectedMenuIndex(index);
+    } else {
+      setMenuList((prev) => {
+        const newList = [...prev];
+        newList[index].menuIndex = selectedMenuIndex;
+        newList[selectedMenuIndex].menuIndex = index;
+
+        const temp = newList[index];
+        newList[index] = newList[selectedMenuIndex];
+        newList[selectedMenuIndex] = temp;
+
+        addPatchMenu(newList[index]);
+        addPatchMenu(newList[selectedMenuIndex]);
+
+        return newList;
+      });
+
+      setSelectedMenuIndex(-1);
+    }
+  };
+
+  const isSelectedMenu = (index: number): string => {
+    if (selectedMenuIndex !== -1) {
+      return index === selectedMenuIndex ? 'border-primary-800' : '';
+    }
+    return '';
   };
 
   useEffect(() => {
@@ -357,11 +424,11 @@ const BoothEditPage: React.FC = () => {
         const condition = await init(boothId);
         if (!condition) {
           alert('부스 정보를 불러오는데 실패했습니다.');
-          navigate('/');
+          navigate('/mobile');
         }
       } else {
         alert('부스 정보를 불러오는데 실패했습니다.');
-        navigate('/');
+        navigate('/mobile');
       }
     };
     fetchData();
@@ -378,139 +445,76 @@ const BoothEditPage: React.FC = () => {
   }, [boothId, navigate, boothInfo.openTime, boothInfo.closeTime]);
 
   return (
-    <div className="flex flex-col px-4 min-w-[630px] pb-20">
-      <form
+      <form className="w-full h-full mt-7"
         onSubmit={(e) => {
           e.preventDefault();
           handleClickSubmit();
         }}
       >
-        <div className="flex justify-between pt-[100px] min-w-[350px] pb-[40px]">
-          <div className="flex items-center gap-4">
-            <IconBoothEdit />
-            <div className="text-primary-800 text-xl md:text-2xl font-semibold">부스 정보 관리</div>
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl w-full h-auto px-4 py-4 pb-12 gap-10 lg:py-[60px] lg:px-[60px] lg:gap-[60px] flex flex-col border-1 border-primary-800-light-16">
-          <div className="flex flex-col gap-[20px] w-full">
-            <div
-              className="w-[95px] h-[45px] rounded-xl flex items-center justify-center bg-primary-800-light-8 text-primary-800-light-86 text-md font-semibold"
-            >
-              부스 정보
+          <div className="px-mobile flex flex-col gap-[20px] text-secondary-700">
+            <div className="flex gap-[10px] items-center">
+              <div className="w-[90px] font-bold text-base shrink-0">학과</div>
+              <div className="w-full h-11 px-5 py-3 bg-secondary-900-light-3 rounded-2lg text-sm text-secondary-500-light-70">
+              {boothInfo?.adminName}
+              </div>
+            </div>
+            <div className="flex gap-[10px] items-center">
+              <div className="w-[90px] font-bold text-base shrink-0">부스이름</div>
+              <input
+                type="text"
+                placeholder="부스 이름을 작성해주세요."
+                className="w-full px-5 py-3 bg-secondary-900-light-3 rounded-2lg text-sm border-none placeholder:text-secondary-500-light-70"
+                maxLength={100}
+                onChange={handleInputBoothName}
+                value={boothInfo?.boothName ?? ''}
+                disabled={isSubmit}
+              />
+            </div>
+            <div className="flex gap-[10px] items-center">
+              <div className="w-[90px] font-bold text-base shrink-0">운영 시간</div>
+              <div className="w-full flex items-center gap-2">
+                <div className="relative w-fit">
+                  <input
+                    className="w-full px-5 py-3 bg-secondary-900-light-3 rounded-2lg text-sm border-none placeholder:text-secondary-500-light-70"
+                    type="text"
+                    maxLength={100}
+                    placeholder="예시) 17:00 ~ 24:00"
+                    onChange={handleInputServiceHours}
+                    value={serviceHours}
+                    disabled={isSubmit}
+                  />
+                </div>
+                <IconBoothListToggle width={48} isActive={isOpen} onClick={() => setIsOpen(!isOpen)} />
+              </div>
+            </div>
+            <div className="flex flex-col gap-[10px] items-start">
+              <div className="font-bold text-base">부스 소개</div>
+              <textarea
+                className="resize-none w-full h-[200px] bg-secondary-900-light-3 rounded-3xl text-sm border-none p-5 placeholder:text-secondary-500-light-70"
+                maxLength={2000}
+                placeholder="부스 소개를 작성해주세요."
+                onChange={handleInputBoothIntro}
+                value={boothInfo?.boothIntro ?? ''}
+                disabled={isSubmit}
+              />
             </div>
 
-            <div
-              className="bg-primary-800-light-3 rounded-xl w-full py-4 px-4 lg:py-[40px] lg:px-[40px] flex flex-col gap-[30px] xl:gap-[20px] border-1 border-primary-800-light-16"
-            >
-              <div className="flex gap-2 flex-wrap xl:flex-nowrap">
-                <div className="w-[92px] flex items-center justify-start text-sm shrink-0">학과명</div>
-                <div className="relative w-full">
-                  <input
-                    className="w-full xl:w-[390px] h-[45px] border border-gray-500 rounded-xl px-[20px] focus:border-primary-800 text-sm"
-                    type="text"
-                    maxLength={100}
-                    placeholder="학과명을 입력하세요."
-                    onChange={handleInputAdminName}
-                    value={boothInfo?.adminName ?? ''}
-                    disabled={isSubmit}
-                  />
-                  { !boothInfo?.adminName && isSubmit && (
-                    <div className="absolute left-0 xl:left-4 top-[62px] text-xs text-red-600">
-                      * 학과명을 입력해주세요.
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex flex-wrap xl:flex-nowrap gap-2">
-                <div className="w-[92px] flex items-center justify-start text-sm shrink-0">부스 타입</div>
-                <div className="relative w-full xl:w-[390px]">
-                  <select
-                    disabled={isSubmit}
-                    className="appearance-none w-full xl:w-[390px] h-[45px] border border-gray-500 rounded-xl px-[20px] focus:border-primary-800 text-sm"
-                    value={boothInfo.adminCategory}
-                    onChange={handleInputAdminCategory}
-                  >
-                    <option value="주간부스">주간부스</option>
-                    <option value="야간부스">야간부스</option>
-                    <option value="푸드트럭">푸드트럭</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex gap-2 flex-wrap xl:flex-nowrap">
-                <div className="w-[92px] flex items-center justify-start text-sm shrink-0">부스 이름</div>
-                <div className="relative w-full">
-                  <input
-                    className="w-full h-[45px] border border-gray-500 rounded-xl px-[20px] focus:border-primary-800 text-sm"
-                    type="text"
-                    maxLength={100}
-                    placeholder="학과명을 입력하세요."
-                    onChange={handleInputBoothName}
-                    value={boothInfo?.boothName ?? ''}
-                    disabled={isSubmit}
-                  />
-                  { !boothInfo?.boothName && isSubmit && (
-                    <div className="absolute left-0 xl:left-4 top-[62px] text-xs text-red-600">
-                      * 부스 부스 이름을 작성해주세요
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex gap-2 flex-wrap xl:flex-nowrap items-center">
-                <div className="w-[92px] flex items-center justify-start text-sm shrink-0">운영 시간</div>
-                <div className="w-full flex items-center gap-2">
-                  <div className="relative w-fit">
-                    <input
-                      className="2xl:w-[520px] h-[45px] border border-gray-500 rounded-xl px-[20px] focus:border-primary-800 text-sm"
-                      type="text"
-                      maxLength={100}
-                      placeholder="예시) 17:00 ~ 24:00"
-                      onChange={handleInputServiceHours}
-                      value={serviceHours}
-                      disabled={isSubmit}
-                    />
-                    { !serviceHours && isSubmit && (
-                      <div className="absolute left-0 xl:left-4 top-[62px] text-xs text-red-600">
-                        * 운영시간을 작성해주세요.
-                      </div>
-                    )}
-                  </div>
-                  <IconBoothListToggle isActive={isOpen} onClick={() => setIsOpen(!isOpen)} />
-                </div>
-              </div>
-
-              <div className="flex w-full gap-2 flex-wrap xl:flex-nowrap">
-                <div className="w-[92px] flex items-center justify-start text-sm shrink-0">부스 소개</div>
-                <div className="relative w-full">
-                  <textarea
-                    className="w-full h-[500px] border-[1px] border-gray-500 rounded-2xl px-[20px] py-[20px] focus:border-primary-800 resize-none text-sm"
-                    maxLength={2000}
-                    placeholder="부스 소개를 작성해주세요."
-                    onChange={handleInputBoothIntro}
-                    value={boothInfo?.boothIntro ?? ''}
-                    disabled={isSubmit}
-                  />
-                  { !boothInfo?.boothIntro && isSubmit && (
-                    <div className="absolute left-0 xl:left-4 top-[152px] xl:top-[302px] text-xs text-red-600">
-                      * 학과 소개를 작성해주세요.
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex w-full gap-2 flex-wrap xl:flex-nowrap">
-                <div className="flex-shrink-0 xl:w-[92px] flex items-center justify-start w-full text-sm">부스 이미지</div>
-                
-                {(fileUrls.length === 0 || fileUrls[0] === '') ? (
+            <div className="flex flex-col gap-[10px] items-start">
+              <div className="font-bold text-base">부스 사진</div>
+              <div
+                className="w-full h-[150px] flex flex-row bg-secondary-900-light-3 rounded-3xl p-3.5 border-2 border-dashed overflow-y-hidden overflow-x-scroll cursor-pointer"
+                id="imagezone"
+              >
+                {fileUrls.length === 0 && (
                   <label
                     htmlFor="dropzone-file"
-                    className="flex flex-col items-center justify-center w-full h-[150px] xl:h-[200px] border-dashed border-primary-400 bg-secondary-900-light-3 rounded-2xl border-[1px] cursor-pointer hover:bg-slate-200"
+                    className="w-full h-full flex flex-col items-center justify-center py-[18px]"
                   >
-                    <IconFileUpload />
-                    <p className="mb-2 text-secondary-500-light-70 text-sm">부스 사진을 등록해주세요.</p>
-                    <p className="text-secondary-500-light-70 text-sm">최대 10장까지 첨부 가능</p>
+                    <div className="flex flex-col items-center justify-center text-secondary-500-light-70 text-sm">
+                      <IconFileUpload />
+                      <p className="dark:text-third-10">부스사진을 등록해주세요.</p>
+                      <p className="dark:text-third-10">최대 10장까지 첨부 가능</p>
+                    </div>
                     <input
                       type="file"
                       id="dropzone-file"
@@ -521,101 +525,93 @@ const BoothEditPage: React.FC = () => {
                       disabled={isSubmit}
                     />
                   </label>
-                ) : (
-                  <div className="flex grow flex-col items-center justify-center overflow-x-auto">
-                    <div className="text-red-500 w-full flex justify-end cursor-pointer mb-2">
-                      <div
-                        onClick={() => setFileUrls([])}
-                        className="w-12 h-6 rounded border-danger-800 bg-white text-danger-800 text-sm flex items-center justify-center border"
-                      >
-                        reset
-                      </div>
-                    </div>
-                    <div className="w-full overflow-x-auto">
-                      <div className="w-full flex gap-4">
-                        {fileUrls.map((url, urlIndex) => (
-                          <div
-                            key={urlIndex}
-                            style={{ backgroundImage: `url(${url})` }}
-                            className="flex-shrink-0 w-[150px] h-[150px] xl:w-[200px] xl:h-[200px] rounded-2xl bg-cover bg-no-repeat bg-center border-2 border-gray-300 bg-white hover:border-primary-800"
-                            draggable={!isSubmit}
-                            onDragStart={(e) => handleDragStart(e, urlIndex)}
-                            onDragOver={(e) => e.preventDefault()}
-                            onDragEnter={(e) => e.preventDefault()}
-                            onDrop={(e) => handleDrop(e, urlIndex)}
-                          />
-                        ))}
-                        {fileUrls.length < 10 && (
-                          <label
-                            htmlFor="dropzone-file"
-                            className="flex-shrink-0 flex flex-col items-center justify-center w-[150px] xl:w-[200px] h-[150px] xl:h-[200px] border-dashed border-gray-500 bg-secondary-900-light-3 rounded-2xl border-[1px] cursor-pointer hover:bg-slate-200"
-                          >
-                            <IconFileUpload />
-                            <p className="text-secondary-500-light-70 text-sm">부스 사진을 등록해주세요.</p>
-                            <p className="text-secondary-500-light-70 text-sm">최대 10장까지 첨부 가능</p>
-                            <input
-                              type="file"
-                              id="dropzone-file"
-                              className="hidden"
-                              onChange={handleFileInput}
-                              multiple
-                              accept="image/*.jpg, image/*.jpeg, image/*.png, image/*.gif"
-                              disabled={isSubmit}
-                            />
-                          </label>
-                        )}
-                      </div>
-                    </div>
+                )}
+
+                {fileUrls.map((url, index) => (
+                  <div
+                    key={index}
+                    className={`relative w-[120px] h-[120px] flex-shrink-0 mr-2 rounded-3xl border ${isSelectedImage(index)}`}
+                    onClick={() => handleSelectImage(index)}
+                  >
+                    <div
+                      style={setBackgroundImage(url)}
+                      className="w-full h-full object-cover rounded-3xl border bg-cover"
+                    />
+                    <IconDelete
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteImage(index);
+                      }}
+                      className="absolute top-2 right-2"
+                    />
                   </div>
+                ))}
+
+                {fileUrls.length > 0 && fileUrls.length < 10 && (
+                  <label
+                    htmlFor="dropzone-file"
+                    className="w-[120px] h-[120px] flex flex-col items-center justify-center py-[18px] shrink-0 border-2 rounded-3xl"
+                  >
+                    <div className="flex flex-col items-center justify-center text-secondary-500-light-70 text-sm">
+                      <IconFileUpload />
+                      <p className="dark:text-third-10">사진 추가</p>
+                    </div>
+                    <input
+                      type="file"
+                      id="dropzone-file"
+                      className="hidden"
+                      onChange={handleFileInput}
+                      multiple
+                      accept="image/*.jpg, image/*.jpeg, image/*.png, image/*.gif"
+                      disabled={isSubmit}
+                    />
+                  </label>
                 )}
               </div>
+            </div>
 
             {ADMIN_CATEGORY[boothInfo.adminCategory] === 'night' && (
               <div>
-                <div className="flex items-center justify-between py-10 gap-10">
-                  <div className="w-[200px] h-[45px] rounded-xl flex items-center justify-center bg-primary-800-light-8 text-primary-800-light-86 text-md font-semibold px-5 gap-3 shrink-0">
-                    현재 테이블 개수
-                    <span className="text-secondary-700">{tableNum}개</span>
+                <div className="flex flex-col w-full">
+                  <div className="font-bold text-base pb-2.5">
+                    현재 테이블 개수 : {tableNum}개
                   </div>
-                  <div
-                    onClick={() => handleClickTableCustom()}
-                    className="is-button font-semibold w-[100px] h-[35px] rounded-xl text-sm flex items-center justify-center text-white lg:text-md bg-primary-800 cursor-pointer select-none"
-                  >
-                    테이블 커스텀
+                  <div className="flex w-full flex-wrap justify-between">
+                    {tableNumList.map((table, tableIndex) => (
+                      <div key={table.tableNumIndex} className="py-2.5 w-[48%]">
+                        <div className="rounded-xl border border-primary-800-light-16 text-sm flex">
+                          <div className="rounded-l-xl bg-primary-500-light-5 py-2.5 px-4">
+                            테이블 {tableIndex + 1}
+                          </div>
+                          <div className="px-4 py-2.5">{table.customTableNum}</div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-                <div className="grid 3xl:grid-cols-4 2xl:grid-cols-3 grid-cols-2 gap-5 place-items-center">
-                  {tableNumList.map((table, tableIndex) => (
-                    <div
-                      key={tableIndex}
-                      className="h-14 flex text-center rounded-3lg shadow-secondary w-full"
+                  <div className="flex justify-end pt-2.5">
+                    <button
+                      className="bg-primary-800 text-white px-6 py-2 rounded-xl font-semibold"
+                      onClick={() => handleClickTableCustom()}
                     >
-                      <div className="w-[100px] bg-primary-800-light-8 rounded-l-3lg border-1 border-primary-800-light-24 text-secondary-700 font-medium text-sm grid place-items-center select-none">
-                        테이블 {tableIndex + 1}
-                      </div>
-                      <div className="grow min-w-[120px] bg-white rounded-r-3lg border-1 border-primary-800-light-16 border-l-0 grid place-items-center text-secondary-800 text-sm font-semibold select-none">
-                        {table.customTableNum}
-                      </div>
-                    </div>
-                  ))}
+                      테이블 커스텀
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
-          </div>
-        </div>
 
         {ADMIN_CATEGORY[boothInfo.adminCategory] === 'night' && (
-          <div className="flex flex-col gap-[20px] w-full">
-            <div className="w-[95px] h-[45px] rounded-xl flex items-center justify-center bg-primary-800-light-8 text-primary-800-light-86 text-md font-semibold">
+          <div className="flex flex-col gap-[20px] w-full mt-5">
+            <div className="font-bold text-base">
               계좌 정보
             </div>
 
-            <div className="bg-primary-800-light-3 rounded-2xl w-full py-4 px-4 lg:py-[40px] lg:px-[60px] flex flex-col gap-[30px] xl:gap-[20px] border-1 border-primary-800-light-16">
-              <div className="flex gap-2 flex-wrap xl:flex-nowrap">
-                <div className="w-[92px] flex items-center justify-start text-sm shrink-0">예금주</div>
+            <div className="flex flex-col gap-[10px]">
+              <div className="flex items-center justify-between">
+                <div className="text-secondary-700 text-sm min-w-[100px]">예금주</div>
                 <div className="relative w-full">
                   <input
-                    className="text-sm md:w-[520px] w-full h-[45px] border border-gray-500 rounded-xl px-[20px] focus:border-primary-800"
+                    className="w-full px-5 py-3 bg-secondary-900-light-3 rounded-2lg text-sm border-none placeholder:text-secondary-500-light-70"
                     type="text"
                     maxLength={100}
                     placeholder="예금주를 입력하세요."
@@ -626,11 +622,11 @@ const BoothEditPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex gap-2 flex-wrap xl:flex-nowrap">
-                <div className="w-[92px] flex items-center justify-start text-sm shrink-0">은행명</div>
+              <div className="flex items-center justify-between">
+                <div className="text-secondary-700 text-sm min-w-[100px]">은행명</div>
                 <div className="relative w-full">
                   <input
-                    className="text-sm md:w-[520px] w-full h-[45px] border border-gray-500 rounded-xl px-[20px] focus:border-primary-800"
+                    className="w-full px-5 py-3 bg-secondary-900-light-3 rounded-2lg text-sm border-none placeholder:text-secondary-500-light-70"
                     type="text"
                     maxLength={100}
                     placeholder="은행명을 입력하세요."
@@ -641,11 +637,11 @@ const BoothEditPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex gap-2 flex-wrap xl:flex-nowrap">
-                <div className="w-[92px] flex items-center justify-start text-sm shrink-0">계좌번호</div>
+              <div className="flex items-center justify-between">
+                <div className="text-secondary-700 text-sm min-w-[100px]">계좌번호</div>
                 <div className="relative w-full">
                   <input
-                    className="text-sm md:w-[520px] w-full h-[45px] border border-gray-500 rounded-xl px-[20px] focus:border-primary-800"
+                    className="w-full px-5 py-3 bg-secondary-900-light-3 rounded-2lg text-sm border-none placeholder:text-secondary-500-light-70"
                     type="text"
                     maxLength={100}
                     placeholder="계좌번호를 입력하세요."
@@ -659,92 +655,86 @@ const BoothEditPage: React.FC = () => {
           </div>
         )} 
 
-        <div className="flex flex-col gap-[20px] w-full">
-          <div className="w-[95px] h-[45px] rounded-xl flex items-center justify-center bg-primary-800-light-8 text-primary-800-light-86 text-md font-semibold">
-            메뉴 정보
-          </div>
-
-          <div className="bg-primary-800-light-3 rounded-2xl w-full lg:py-[30px] lg:px-[30px] px-4 py-4 flex flex-col border-1 border-primary-800-light-16">
-            <div className="grid gap-4 grid-cols-1 2xl:grid-cols-2">
-              {menuList.map((menu, menuIndex) => (
-                <div
-                  key={menuIndex}
-                  className="h-[170px] rounded-2xl flex text-sm items-center font-bold p-5 gap-[28px] bg-white hover:border-primary-900 border-1 border-primary-800-light-16"
-                  draggable={!isSubmit}
-                  onDragStart={(e) => handleDragStartMenu(e, menuIndex)}
-                  onDragOver={(e) => e.preventDefault()}
-                  onDragEnter={(e) => e.preventDefault()}
-                  onDrop={(e) => handleDropMenu(e, menuIndex)}
-                >
+        <div className="flex flex-col gap-[10px] items-start">
+          <div className="font-bold text-base">메뉴 정보</div>
+          <div className="w-full flex flex-col gap-[10px]">
+            {menuList.map((menu, index) => (
+              <div
+                key={menu.menuId}
+                onClick={() => handleSelectMenu(index)}
+                className={`w-full h-fit p-[14px] bg-white rounded-3xl border flex flex-col justify-between ${isSelectedMenu(index)}`}
+              >
+                <div className="flex mb-[12px]">
                   <div
-                    className="hidden md:block w-[120px] h-[120px] bg-contain bg-no-repeat bg-center bg-white rounded-xl flex-shrink-0 border-gray-200 border"
+                    className="w-[94px] h-[94px] bg-contain bg-no-repeat bg-center bg-white rounded-xl flex-shrink-0 border-gray-200 border mr-3"
                     style={setBackgroundImage(menu.menuImage)}
-                  />
-                  <div className="flex flex-col w-full justify-between">
-
-                    <div className="flex justify-between items-center h-[29px] w-full min-w-fit gap-2">
-                      <div className="w-3/5 text-base font-semibold text-secondary-800 text-nowrap truncate 2xl:max-w-[110px]">
-                        {menu.menuName}
+                  ></div>
+                  <div className="w-full flex flex-col justify-between">
+                    <div>
+                      <div className="pb-3 pt-[9px] flex justify-between">
+                        <div className="text-sm font-semibold">{menu.menuName}</div>
+                        <div className="flex">
+                          {ADMIN_CATEGORY[boothInfo.adminCategory] === 'night' && (
+                            <div className="flex items-center justify-center w-[45px] h-[17px] bg-secondary-900-light-3 text-[8px] rounded-full">
+                              {MENU_TYPE[menu.menuType]}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div className="w-2/5 gap-[5px] items-center text-sm flex flex-shrink-0 justify-end grow font-medium 2xl:max-w-[130px]">
-                        {ADMIN_CATEGORY[boothInfo.adminCategory] !== "day" && (
-                          <div className="w-[55px] h-[25px] text-[10px] rounded-full bg-secondary-900-light-3 items-center flex justify-center text-secondary-800">
-                            {MENU_TYPE[menu.menuType]}
-                          </div>
-                        )}
-                        <button
-                          className="w-[45px] h-[25px] rounded-full flex items-center justify-center text-[10px] text-primary-800 bg-primary-800-light-8 cursor-pointer"
-                          type="button"
-                          onClick={() => openMenuModal(menu)}
-                        >
-                          수정
-                        </button>
-                        <button
-                          className="w-[45px] h-[25px] lg:max-xl:flex rounded-full 2xl:flex items-center justify-center bg-danger-800-light-12 text-danger-800 text-[10px]"
-                          type="button"
-                          onClick={() =>
-                            handleClickDeleteMenu({ menuIndex, menuId: menu.menuId })
-                          }
-                        >
-                          삭제
-                        </button>
-                      </div>
+                      <div className="w-fit text-[10px]">{menu.menuDescription}</div>
                     </div>
-
-                    <p className="pt-[12px] pb-[12px] h-[78px] text-secondary-700 font-normal text-xs break-all text-wrap line-clamp-3">
-                      {menu.menuDescription}
-                    </p>
-
-                    <div className="flex justify-between items-center w-full">
-                      <div className="text-secondary-800 font-bold text-base">
-                        {prettyPrice(menu.menuPrice)}
+                    <div className="flex justify-between pb-[9px]">
+                      <div className="flex items-center">
+                        <div className="text-sm font-semibold">{menu.menuPrice}</div>
+                        <div className="text-sm">원</div>
                       </div>
                       <IconBoothListToggle
                         isActive={!menu.isSoldOut}
-                        onClick={() => (menu.isSoldOut = !menu.isSoldOut)}
+                        width={40}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          menu.isSoldOut = !menu.isSoldOut;
+                        }}
                       />
                     </div>
                   </div>
                 </div>
-              ))}
-
-              <div
-                onClick={() => openMenuModal({})}
-                className="h-[170px] bg-secondary-900-light-3 rounded-2xl border-2 border-dashed border-primay-400 flex flex-col items-center justify-center text-secondary-500-light-70 cursor-pointer"
-              >
+                <div className="flex gap-[10px]">
+                  <div
+                    className="w-1/2 h-[33px] flex justify-center items-center bg-primary-200 text-primary-800 py-[6px] px-4 rounded-full cursor-pointer"
+                    onClick={() => openMobileModal(menu)}
+                  >
+                    수정
+                  </div>
+                  <div
+                    className="w-1/2 h-[33px] flex justify-center items-center bg-danger-800-light-12 text-danger-800 py-[6px] px-4 rounded-full cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleClickDeleteMenu({ menuIndex: index, menuId: menu.menuId });
+                    }}
+                  >
+                    삭제
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div
+              onClick={() => openMobileModal({})}
+              className="w-full h-[150px] flex flex-col items-center justify-center border-dashed border-2 rounded-3xl bg-primary-300-light"
+            >
+              <div className="flex flex-col items-center justify-center p-5">
                 <IconAdd />
-                <div className="text-sm">메뉴 추가하기</div>
+                <div className="pt-[10px] text-sm text-secondary-500-light-70">메뉴 추가하기</div>
               </div>
             </div>
           </div>
         </div>
 
         {ADMIN_CATEGORY[boothInfo.adminCategory] === 'night' && (
-          <div className="flex gap-6 md:gap-[40px] items-center flex-wrap">
-            <div className="w-[170px]">
-              <div className="h-[45px] rounded-xl text-primary-800-light-86 flex items-center justify-center font-semibold text-md bg-primary-800-light-8">
-                예약기능 사용 여부
-              </div>
+
+          <div className="flex gap-2 flex-col items-start">
+            <div className="font-bold text-base shrink-0">
+              예약기능 사용 여부
             </div>
             <div className="flex gap-[28px]">
               <div
@@ -766,8 +756,8 @@ const BoothEditPage: React.FC = () => {
         )}
 
         {ADMIN_CATEGORY[boothInfo.adminCategory] === 'night' && (
-          <div className="flex gap-6 md:gap-[40px] items-center flex-wrap">
-            <div className="w-[170px] h-[45px] rounded-xl text-primary-800-light-86 flex items-center justify-center font-semibold text-md bg-primary-800-light-8">
+          <div className="flex gap-2 flex-col items-start">
+            <div className="font-bold text-base shrink-0">
               주문 기능 사용 여부
             </div>
             <div className="flex gap-[28px]">
@@ -790,8 +780,8 @@ const BoothEditPage: React.FC = () => {
         )}
 
         {ADMIN_CATEGORY[boothInfo.adminCategory] === 'night' && (
-          <div className="flex gap-6 md:gap-[40px] items-center flex-wrap">
-            <div className="w-[170px] h-[45px] rounded-xl text-primary-800-light-86 flex items-center justify-center font-semibold text-md bg-primary-800-light-8">
+          <div className="flex gap-2 flex-col tems-start">
+            <div className="font-bold text-base shrink-0">
               직원 호출 기능 사용 여부
             </div>
             <div className="flex gap-[28px]">
@@ -814,9 +804,9 @@ const BoothEditPage: React.FC = () => {
         )}
 
         {ADMIN_CATEGORY[boothInfo.adminCategory] === 'night' && (
-          <div className="flex gap-8 flex-col">
+          <div className="pt-4 flex gap-8 flex-col">
             <div className="flex gap-2 md:gap-4 items-center flex-wrap">
-              <div className="text-primary-800-light-86 flex items-center justify-center font-semibold text-md">
+              <div className="font-bold">
                 카카오페이
               </div>
               <IconBoothListToggle isActive={isKakaoPay} onClick={() => setIsKakaoPay(!isKakaoPay)} />
@@ -840,7 +830,7 @@ const BoothEditPage: React.FC = () => {
             )}
             </div>
             <div className="flex gap-2 md:gap-4 items-center flex-wrap">
-              <div className="text-primary-800-light-86 flex items-center justify-center font-semibold text-md">
+              <div className="font-bold">
                 토스페이
               </div>
               <IconBoothListToggle isActive={isTossPay} onClick={() => setIsTossPay(!isTossPay)} />
@@ -867,17 +857,16 @@ const BoothEditPage: React.FC = () => {
         )}
         </div>
         
-        <div className="flex justify-end items-center gap-4 pt-[40px] mr-8">
+        <div className="pb-8 flex justify-end items-center gap-4 pt-[40px] mr-8">
           <button
             type="submit"
             className="is-button font-semibold w-[60px] h-[35px] rounded-xl text-sm flex items-center justify-center text-white lg:text-md bg-primary-800 cursor-pointer select-none"
           >
-            등록
+            수정
           </button>
         </div>
 
       </form>
-    </div>
   );
 };
 

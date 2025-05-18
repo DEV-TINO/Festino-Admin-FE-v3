@@ -124,7 +124,7 @@ export interface TableDetailState {
   setTableNumList: (list: TableItem[]) => void;
 }
 
-export type MenuType = 'MAINMENU' | 'SUBMENU';
+export type MenuType = 'MAIN' | 'SUB';
 
 export interface MenuInfo {
   menuId?: string;

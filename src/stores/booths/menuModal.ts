@@ -12,7 +12,7 @@ export const useMenuModal = create<MenuModalState>((set, get) => {
     menuPrice: '',
     menuDescription: '',
     menuImage: '',
-    menuType: 'MAINMENU',
+    menuType: 'MAIN',
     isSoldOut: false,
     menuIndex: boothDetailStore.menuList.length,
   });
@@ -39,7 +39,7 @@ export const useMenuModal = create<MenuModalState>((set, get) => {
       set({
         menuInfo: menu ? { ...menu, menuIndex: menu.menuIndex ?? boothDetailStore.menuList.length } as MenuInfo : getDefaultMenuInfo(),
       });
-      baseModalStore.setModalType('mobileMenu');
+      baseModalStore.setModalType('menuModal');
       baseModalStore.openMobileModal();
     },
 
