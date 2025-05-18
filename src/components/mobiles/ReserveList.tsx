@@ -24,13 +24,19 @@ export default function ReserveList({ listType }: Props) {
   const refreshReserveList = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(async () => {
-      if (!selectedBooth.boothId) return;
+      if (!selectedBooth.boothId) {
+        setLoading(true);
+        return;
+      }
       await getReserveList({ boothId: selectedBooth.boothId, type: 'reserve' });
     }, 3000);
   };
 
   const loadData = async () => {
-    if (!selectedBooth.boothId) return;
+    if (!selectedBooth.boothId) {
+      setLoading(true);
+      return;
+    }
     setLoading(true);
     await getReserveList({ boothId: selectedBooth.boothId, type: listType });
 

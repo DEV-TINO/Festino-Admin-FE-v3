@@ -26,7 +26,10 @@ const MobileConfirmModal = () => {
   const [loading, setLoading] = useState(false);
 
   const confirm = async () => {
-    if (!selectedBooth?.boothId || !reserveData?.reservationId) return;
+    if (!selectedBooth?.boothId || !reserveData?.reservationId) {
+      setLoading(true);
+      return;
+    }
     setLoading(true);
 
     if (confirmType === 'confirm') {
