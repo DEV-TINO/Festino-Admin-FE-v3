@@ -17,7 +17,7 @@ const BoothEditPage: React.FC = () => {
   const { boothId } = useParams<{ boothId: string }>();
 
   const { tableNum, tableNumList, openTableDetailModal, submitTableDetail } = useTableDetail();
-  const { setBoothInfo, boothInfo, menuList, createMenuList, deleteMenuList, patchMenuList, originalMenuList, addDeleteMenu, addPatchMenu, updateMenuList, init, deleteMenu, createMenu, patchMenu  } = useBoothDetail();
+  const { setBoothInfo, boothInfo, menuList, createMenuList, deleteMenuList, patchMenuList, addDeleteMenu, addPatchMenu, updateMenuList, init, deleteMenu, createMenu, patchMenu  } = useBoothDetail();
   const { openMenuModal } = useMenuModal();
 
   const [serviceHours, setServiceHours] = useState('');

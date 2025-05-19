@@ -16,7 +16,7 @@ const BoothEditPage: React.FC = () => {
   const { boothId } = useParams<{ boothId: string }>();
 
   const { tableNum, tableNumList, openMobileTableDetailModal, submitTableDetail } = useTableDetail();
-  const { setBoothInfo, boothInfo, menuList, createMenuList, deleteMenuList, boothType, patchMenuList, originalMenuList, addDeleteMenu, addPatchMenu, updateMenuList, init, reset, deleteMenu, createMenu, patchMenu  } = useBoothDetail();
+  const { setBoothInfo, boothInfo, menuList, createMenuList, deleteMenuList, patchMenuList, originalMenuList, addDeleteMenu, addPatchMenu, updateMenuList, init, deleteMenu, createMenu, patchMenu  } = useBoothDetail();
   const { openMobileModal } = useMenuModal();
   const [selectedMenuIndex, setSelectedMenuIndex] = useState<number>(-1);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(-1);
@@ -30,7 +30,7 @@ const BoothEditPage: React.FC = () => {
   const [useOrder, setUseOrder] = useState(false);
   const [isCall, setIsCall] = useState(false);
 
-  const isSelectedImage = (index) => {
+  const isSelectedImage = (index: number) => {
     if (selectedImageIndex !== -1) {
       if (index === selectedImageIndex) return 'border-primary-800';
       else return '';
@@ -333,7 +333,7 @@ const BoothEditPage: React.FC = () => {
       setSelectedImageIndex(-1);
     }
   };
-
+  
   const handleSelectMenu = (index: number) => {
     if (selectedMenuIndex === index) {
       setSelectedMenuIndex(-1);
@@ -343,21 +343,11 @@ const BoothEditPage: React.FC = () => {
     if (selectedMenuIndex === -1) {
       setSelectedMenuIndex(index);
     } else {
-      setMenuList((prev) => {
-        const newList = [...prev];
-        newList[index].menuIndex = selectedMenuIndex;
-        newList[selectedMenuIndex].menuIndex = index;
-
-        const temp = newList[index];
-        newList[index] = newList[selectedMenuIndex];
-        newList[selectedMenuIndex] = temp;
-
-        addPatchMenu(newList[index]);
-        addPatchMenu(newList[selectedMenuIndex]);
-
-        return newList;
-      });
-
+      const newList = [...menuList];
+      [newList[index], newList[selectedMenuIndex]] = [newList[selectedMenuIndex], newList[index]];
+      addPatchMenu(newList[index]);
+      addPatchMenu(newList[selectedMenuIndex]);
+      updateMenuList(newList);
       setSelectedMenuIndex(-1);
     }
   };
@@ -370,30 +360,26 @@ const BoothEditPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (boothId) {
-        const condition = await init(boothId);
-        if (!condition) {
-          alert('부스 정보를 불러오는데 실패했습니다.');
-          navigate('/mobile');
-        }
-      } else {
+    const fetch = async () => {
+      const condition = await init(boothId!);
+      if (!condition) {
         alert('부스 정보를 불러오는데 실패했습니다.');
         navigate('/mobile');
+        return;
       }
+  
+      const info = useBoothDetail.getState().boothInfo;
+      setServiceHours(`${info.openTime} ~ ${info.closeTime}`);
+      setIsCall(info.isCall);
+      setIsOpen(info.isOpen);
+      setUseOrder(info.isOrder);
+      setUseReservation(info.isReservation);
+      setIsTossPay(info.isTossPay);
+      setIsKakaoPay(info.isKakaoPay);
+      setFileUrls(info.boothImage ?? []);
     };
-    fetchData();
-    if (boothInfo.openTime && boothInfo.closeTime) {
-      setServiceHours(`${boothInfo.openTime} ~ ${boothInfo.closeTime}`);
-    }
-    setUseOrder(boothInfo.isOrder);
-    setIsCall(boothInfo.isCall);
-    setUseReservation(boothInfo.isReservation);
-    setIsOpen(boothInfo.isOpen);
-    setIsKakaoPay(boothInfo.isKakaoPay);
-    setIsTossPay(boothInfo.isTossPay);
-    setFileUrls(boothInfo.boothImage);
-  }, [boothId, navigate, boothInfo.openTime, boothInfo.closeTime]);
+    fetch();
+  }, [boothId]);  
 
   return (
       <form className="w-full h-full mt-7"

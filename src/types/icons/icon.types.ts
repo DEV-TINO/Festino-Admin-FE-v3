@@ -57,6 +57,12 @@ export interface IconCloseProps {
 }
 
 export interface IconDeleteProps {
+  onClick: React.MouseEventHandler<HTMLDivElement>
+  className?: string;
+}
+
+
+export interface IconDeletePropsNonEvent {
   onClick: () => void;
   className?: string;
 }

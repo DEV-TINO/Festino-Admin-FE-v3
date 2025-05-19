@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 interface ToggleProps {
   isActive: boolean;
   width?: number;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLDivElement>; // ✅ 수정
 }
+
 
 const IconBoothListToggle: React.FC<ToggleProps> = ({ isActive, width = 60, onClick }) => {
   const [height, setHeight] = useState<number>((width * 30) / 90);

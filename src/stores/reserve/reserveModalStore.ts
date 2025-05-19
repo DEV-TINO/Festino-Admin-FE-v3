@@ -25,7 +25,7 @@ interface ReserveModalState {
   closeMobilePopup: () => void;
 }
 
-export const useReserveModalStore = create<ReserveModalState>((set, get) => {
+export const useReserveModalStore = create<ReserveModalState>((set) => {
   const baseModal = useBaseModal.getState();
   
   return {

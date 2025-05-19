@@ -6,35 +6,31 @@ import { useReserveModalStore } from '@/stores/reserve/reserveModalStore';
 import { useUserStore } from '@/stores/logins/userStore';
 import { useBoothDetail } from '@/stores/booths/boothDetail';
 import { useMessageStore } from '@/stores/reserve/message';
-import { useNavigate } from 'react-router-dom';
+import { Booth } from '@/types/booths/booth.types';
 
 const MobileReservePage: React.FC = () => {
-  const navigate = useNavigate();
-  const [reserveBoothList, setReserveBoothList] = useState<any[]>([]);
+  const [reserveBoothList, setReserveBoothList] = useState<Booth[]>([]);
   const [listType, setListType] = useState<'reserve' | 'cancel' | 'complete'>('reserve');
-  const [checkMark, setCheckMark] = useState(false);
-  const [beforeReserveState, setBeforeReserveState] = useState(0);
   const [isActive, setIsActive] = useState({ reserveList: true, deleteList: false, completeList: false });
 
   const { boothList, getAllBoothList } = useBoothList();
   const { selectedBooth, setSelectedBooth, openCustomMessagePopup } = useReserveModalStore();
   const { reserveList } = useReserveListStore();
   const { isAdmin, userOwnBoothId, getUserOwnBoothId } = useUserStore();
-  const { boothInfo, setBoothInfo } = useBoothDetail();
+  const { setBoothInfo } = useBoothDetail();
   const { getMessage } = useMessageStore();
 
   const toggleTab = (type: 'reserve' | 'cancel' | 'complete') => {
     setListType(type);
     setIsActive({
       reserveList: type === 'reserve',
-      cancelList: type === 'cancel',
+      deleteList: type === 'cancel',
       completeList: type === 'complete',
     });
   };
 
   const activeUnderline = (active: boolean) => active ? 'h-1 bg-primary-800 rounded-full text-secondary-700' : '';
   const activeTab = (active: boolean) => active ? 'text-secondary-900' : '';
-  const visibility = () => checkMark ? 'visible' : 'invisible';
 
   const handleClickOpenCustomMessage = async () => {
     if (!selectedBooth?.boothId) return;
@@ -53,31 +49,26 @@ const MobileReservePage: React.FC = () => {
       } else {
         if (userOwnBoothId) {
           const found = filtered.find((booth: any) => booth.boothId === userOwnBoothId);
-          if (found) setSelectedBooth(found);
+          if (found) {
+            setSelectedBooth(found);
+            setBoothInfo(found);
+          }
         } else {
           getUserOwnBoothId();
         }
       }
-      setBeforeReserveState(reserveList.reserve.length);
-      setBoothInfo(selectedBooth);
     };
     init();
   }, [userOwnBoothId]);
 
   useEffect(() => {
-    if (listType !== 'reserve') {
-      if (reserveList.reserve.length !== beforeReserveState) setCheckMark(true);
-    } else {
-      setCheckMark(false);
-    }
-    setBeforeReserveState(reserveList.reserve.length);
   }, [reserveList.reserve]);
 
   useEffect(() => {
-    if (selectedBooth?.boothId && reserveBoothList.length > 0) {
-      toggleTab('reserve');
-    }
-  }, [selectedBooth, reserveBoothList]);
+    if (!selectedBooth?.boothId || reserveBoothList.length === 0) return;
+  
+    toggleTab('reserve');
+  }, []);
 
   return (
     <div className="w-full h-full">
