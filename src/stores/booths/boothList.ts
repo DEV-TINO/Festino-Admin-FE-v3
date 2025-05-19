@@ -86,4 +86,20 @@ export const useBoothList = create<BoothListState>((set, get) => ({
       console.error(error);
     }
   },
+
+  updateBoothCall: async ({ boothId, isCall, adminCategory }) => {
+    try {
+      const response = await api.put(`/admin/booth/${ADMIN_CATEGORY[adminCategory]}/call`, {
+        boothId,
+        isCall,
+      });
+      if (response.data.success) {
+        await get().getAllBoothList();
+      } else {
+        alertError(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  },
 }));

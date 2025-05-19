@@ -37,6 +37,7 @@ export interface BoothListState {
   updateBoothOpen: (args: { boothId: string; isOpen: boolean; adminCategory: string }) => Promise<void>;
   updateBoothOrder: (args: { boothId: string; isOrder: boolean; adminCategory: string }) => Promise<void>;
   updateBoothReservation: (args: { boothId: string; isReservation: boolean; adminCategory: string }) => Promise<void>;
+  updateBoothCall: (args: { boothId: string; isCall: boolean; adminCategory: string }) => Promise<void>;
   handleClickBoothDetail: (boothId: string) => void;
 }
 

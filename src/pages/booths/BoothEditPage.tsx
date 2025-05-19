@@ -143,6 +143,20 @@ const BoothEditPage: React.FC = () => {
     });
   };
 
+  const handleClickMenuToggle = (index: number, isSoldOut: boolean) => {
+    if (isSubmit) return;
+
+    const updatedMenu = {
+      ...menuList[index],
+      isSoldOut: !isSoldOut,
+    };
+
+    menuList[index] = updatedMenu;
+
+    addPatchMenu(updatedMenu);
+    updateMenuList(menuList);
+  };
+
   const handleInputBankName = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (isSubmit) return;
     const current = useBoothDetail.getState().boothInfo;
@@ -325,22 +339,6 @@ const BoothEditPage: React.FC = () => {
       ...patchMenuList.map((menu) => patchMenu(menu)),
       ...createMenuList.map((menu) => createMenu(menu)),
     ]);
-  
-    await Promise.allSettled(
-      originalMenuList
-        .map((originalMenu) => {
-          const matched = menuList.find((menu) => menu.menuId === originalMenu.menuId);
-          if (matched && matched.isSoldOut !== originalMenu.isSoldOut) {
-            return api.put('/admin/menu/sold-out', {
-              menuId: matched.menuId,
-              isSoldOut: originalMenu.isSoldOut,
-              boothId: newBoothId,
-            });
-          }
-          return null;
-        })
-        .filter(Boolean) as Promise<any>[]
-    );
   
     if (ADMIN_CATEGORY[boothInfo.adminCategory] === 'night') {
       const tableDetailResult = await submitTableDetail(boothInfo.boothId);
@@ -722,7 +720,7 @@ const BoothEditPage: React.FC = () => {
                       </div>
                       <IconBoothListToggle
                         isActive={!menu.isSoldOut}
-                        onClick={() => (menu.isSoldOut = !menu.isSoldOut)}
+                        onClick={() => handleClickMenuToggle(menuIndex, menu.isSoldOut)}
                       />
                     </div>
                   </div>
