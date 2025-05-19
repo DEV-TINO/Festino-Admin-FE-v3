@@ -54,12 +54,21 @@ const MobileConfirmModal = () => {
     if (loading) {
       openLoadingModal();
     }
-  }, [loading, openLoadingModal, closeMobilePopup]);
+  }, [loading, openLoadingModal]);
 
   useEffect(() => {
-    if (confirmType) {
-      setTitle(BOOTH_POPUP_INFO[confirmType]?.title || '');
-      setSubTitle(BOOTH_POPUP_INFO[confirmType]?.subTitle || '');
+    if (confirmType && confirmType in BOOTH_POPUP_INFO) {
+      const popup = BOOTH_POPUP_INFO[confirmType as keyof typeof BOOTH_POPUP_INFO];
+      if (typeof popup === 'object' && 'title' in popup && 'subTitle' in popup) {
+        setTitle(popup.title);
+        setSubTitle(popup.subTitle);
+      } else {
+        setTitle('');
+        setSubTitle('');
+      }
+    } else {
+      setTitle('');
+      setSubTitle('');
     }
   }, [confirmType]);
 

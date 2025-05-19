@@ -10,7 +10,7 @@ interface CustomMessage {
   messageType: number;
 }
 
-interface ReserveData {
+export interface ReserveData {
   phoneNum: string;
   userName: string;
 }
