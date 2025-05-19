@@ -42,7 +42,7 @@ const MenuModal: React.FC = () => {
 
     setMenuInfo({
       ...menuInfo,
-      menuType: isMainMenu ? 'MAINMENU' : 'SUBMENU',
+      menuType: isMainMenu ? 'MAIN' : 'SUB',
     });
     submitModal();
     setIsSubmit(false);
