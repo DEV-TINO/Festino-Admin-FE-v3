@@ -37,6 +37,7 @@ export interface BoothListState {
   updateBoothOpen: (args: { boothId: string; isOpen: boolean; adminCategory: string }) => Promise<void>;
   updateBoothOrder: (args: { boothId: string; isOrder: boolean; adminCategory: string }) => Promise<void>;
   updateBoothReservation: (args: { boothId: string; isReservation: boolean; adminCategory: string }) => Promise<void>;
+  updateBoothCall: (args: { boothId: string; isCall: boolean; adminCategory: string }) => Promise<void>;
   handleClickBoothDetail: (boothId: string) => void;
 }
 
@@ -114,6 +115,7 @@ export interface TableDetailState {
   tableNumList: TableItem[];
   tableNum: number;
 
+  openMobileTableDetailModal: () => void;
   openTableDetailModal: () => void;
   closeTableDetailModal: () => void;
   getTableList: (boothId: string) => Promise<void>;
@@ -124,7 +126,7 @@ export interface TableDetailState {
   setTableNumList: (list: TableItem[]) => void;
 }
 
-export type MenuType = 'MAINMENU' | 'SUBMENU';
+export type MenuType = 'MAIN' | 'SUB';
 
 export interface MenuInfo {
   menuId?: string;

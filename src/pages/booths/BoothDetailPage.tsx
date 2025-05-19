@@ -387,7 +387,7 @@ const BoothDetailPage: React.FC = () => {
                     카카오페이
                   </div>
                   <div className="relative w-full">
-                    <div className="w-full py-3 border border-primary-800-light-16 rounded-xl px-[20px] text-sm">{boothInfo?.kakaoPay ?? ''}</div>
+                    <div className="w-full py-3 border border-primary-800-light-16 rounded-xl px-[20px] text-sm break-all">{boothInfo?.kakaoPay ?? ''}</div>
                   </div>
                 </div>
               )}
@@ -397,7 +397,7 @@ const BoothDetailPage: React.FC = () => {
                     토스페이
                   </div>
                   <div className="relative w-full">
-                    <div className="w-full py-3 border border-primary-800-light-16 rounded-xl px-[20px] text-sm">{boothInfo?.tossPay ?? ''}</div>
+                    <div className="w-full py-3 border border-primary-800-light-16 rounded-xl px-[20px] text-sm break-all">{boothInfo?.tossPay ?? ''}</div>
                   </div>
                 </div>
               )}

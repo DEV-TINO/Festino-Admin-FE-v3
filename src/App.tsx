@@ -18,6 +18,11 @@ import BoothEditPage from './pages/booths/BoothEditPage';
 import ModalPage from './pages/modals/ModalPage';
 import AppInitializer from './components/AppInitializer';
 import TablingPage from './pages/tablings/TablingPage';
+import MobileLogin from './pages/mobiles/MobileLoginPage';
+import MobileMain from './pages/mobiles/MobileMainPage';
+import MobileBoothEdit from './pages/mobiles/MobileBoothEdit';
+import MobileModalPage from './pages/modals/mobile/MobileModalPage';
+import MobileReservePage from './pages/mobiles/MobileRservePage';
 
 const App: React.FC = () => {
   return (
@@ -25,6 +30,7 @@ const App: React.FC = () => {
       <AppInitializer />
       <AuthGuard />
       <ModalPage />
+      <MobileModalPage />
       <Routes>
         <Route element={<DefaultLayout />}>
           {/* Main */}
@@ -53,6 +59,10 @@ const App: React.FC = () => {
 
         {/* mobile */}
         <Route path="/mobile" element={<MobileLayout />}>
+          <Route path="login" element={<MobileLogin />} /> 
+          <Route path="" element={<MobileMain />} />
+          <Route path="booth/:boothId" element={<MobileBoothEdit />} />
+          <Route path="reserve" element={<MobileReservePage />} /> 
         </Route>
       </Routes>
     </BrowserRouter>
