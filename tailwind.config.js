@@ -166,7 +166,10 @@ export default {
         'order-icon': "url('/icons/orders/order.svg')",
         // booth
         'booth-list': "url('/icons/booths/list.svg')",
-      }
+      },
+      padding: {
+        'mobile': '8%',
+      },
     },
   },
   plugins: [require('tailwind-scrollbar-hide')],

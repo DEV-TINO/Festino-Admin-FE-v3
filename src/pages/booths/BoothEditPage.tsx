@@ -143,6 +143,20 @@ const BoothEditPage: React.FC = () => {
     });
   };
 
+  const handleClickMenuToggle = (index: number, isSoldOut: boolean) => {
+    if (isSubmit) return;
+
+    const updatedMenu = {
+      ...menuList[index],
+      isSoldOut: !isSoldOut,
+    };
+
+    menuList[index] = updatedMenu;
+
+    addPatchMenu(updatedMenu);
+    updateMenuList(menuList);
+  };
+
   const handleInputBankName = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (isSubmit) return;
     const current = useBoothDetail.getState().boothInfo;
@@ -230,6 +244,7 @@ const BoothEditPage: React.FC = () => {
       isOpen: isOpen,
       isTossPay: isTossPay,
       isKakaoPay: isKakaoPay,
+      isCall: isCall,
     };
   
     const saveBoothUrl = `/admin/booth/${ADMIN_CATEGORY[boothInfo.adminCategory]}`;
@@ -247,6 +262,7 @@ const BoothEditPage: React.FC = () => {
       isOpen: updatedBoothInfo.isOpen,
       isTossPay: updatedBoothInfo.isTossPay,
       isKakaoPay: updatedBoothInfo.isKakaoPay,
+      isCall: isCall,
     };
   
     let newBoothId = '';
@@ -323,22 +339,6 @@ const BoothEditPage: React.FC = () => {
       ...patchMenuList.map((menu) => patchMenu(menu)),
       ...createMenuList.map((menu) => createMenu(menu)),
     ]);
-  
-    await Promise.allSettled(
-      originalMenuList
-        .map((originalMenu) => {
-          const matched = menuList.find((menu) => menu.menuId === originalMenu.menuId);
-          if (matched && matched.isSoldOut !== originalMenu.isSoldOut) {
-            return api.put('/admin/menu/sold-out', {
-              menuId: matched.menuId,
-              isSoldOut: originalMenu.isSoldOut,
-              boothId: newBoothId,
-            });
-          }
-          return null;
-        })
-        .filter(Boolean) as Promise<any>[]
-    );
   
     if (ADMIN_CATEGORY[boothInfo.adminCategory] === 'night') {
       const tableDetailResult = await submitTableDetail(boothInfo.boothId);
@@ -575,12 +575,13 @@ const BoothEditPage: React.FC = () => {
                     현재 테이블 개수
                     <span className="text-secondary-700">{tableNum}개</span>
                   </div>
-                  <div
+                  <button
+                    type="button"
                     onClick={() => handleClickTableCustom()}
                     className="is-button font-semibold w-[100px] h-[35px] rounded-xl text-sm flex items-center justify-center text-white lg:text-md bg-primary-800 cursor-pointer select-none"
                   >
                     테이블 커스텀
-                  </div>
+                  </button>
                 </div>
                 <div className="grid 3xl:grid-cols-4 2xl:grid-cols-3 grid-cols-2 gap-5 place-items-center">
                   {tableNumList.map((table, tableIndex) => (
@@ -719,7 +720,7 @@ const BoothEditPage: React.FC = () => {
                       </div>
                       <IconBoothListToggle
                         isActive={!menu.isSoldOut}
-                        onClick={() => (menu.isSoldOut = !menu.isSoldOut)}
+                        onClick={() => handleClickMenuToggle(menuIndex, menu.isSoldOut)}
                       />
                     </div>
                   </div>

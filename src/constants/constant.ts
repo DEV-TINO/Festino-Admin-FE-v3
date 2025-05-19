@@ -97,8 +97,9 @@ export const ADMIN_CATEGORY: Record<string, string> = {
 };
 
 export const MENU_TYPE: Record<string, string> = {
-  MAINMENU: '메인 메뉴',
-  SUBMENU: '서브 메뉴',
+  MAIN: '메인 메뉴',
+  SUB: '서브 메뉴',
+  CALLSERVICE: '직원 호출',
 };
 
 export const RESERVE_TYPE = {
