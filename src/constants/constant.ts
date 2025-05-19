@@ -58,7 +58,7 @@ interface PopupText {
 
 type BoothToggleKey = 'true' | 'false';
 
-interface BoothPopupInfo {
+export interface BoothPopupInfo {
   booth: Record<BoothToggleKey, PopupText>;
   restore: PopupText;
   confirm: PopupText;

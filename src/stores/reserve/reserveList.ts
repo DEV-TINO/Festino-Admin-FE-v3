@@ -23,12 +23,12 @@ interface ReserveListStore {
   deleteReserveList: ReserveItem[];
   searchKeyword: string;
   setSearchKeyword: (keyword: string) => void;
-  setReserveList: (params: { type: ReserveType; data: ReserveItem[] }) => void;
+  setReserveList: (params: { type: string; data: ReserveItem[] }) => void;
   getFilteredReserveList: (type: ReserveType) => ReserveItem[];
-  getReserveList: (params: { boothId: string; type: ReserveType }) => Promise<void>;
+  getReserveList: (params: { boothId: string; type: string }) => Promise<void>;
   confirmReserve: (params: { boothId: string; reserveId: string }) => Promise<boolean>;
   deleteReserve: (params: { boothId: string; reserveId: string }) => Promise<boolean>;
-  restoreReserve: (params: { boothId: string; reserveId: string; reserveType: ReserveType }) => Promise<boolean>;
+  restoreReserve: (params: { boothId: string; reserveId: string; reserveType: string }) => Promise<boolean>;
 }
 
 export const useReserveListStore = create<ReserveListStore>((set, get) => ({
@@ -63,7 +63,7 @@ export const useReserveListStore = create<ReserveListStore>((set, get) => ({
     );
   },
 
-  getReserveList: async ({ boothId, type }: { boothId: string; type: ReserveType }) => {
+  getReserveList: async ({ boothId, type }: { boothId: string; type: string }) => {
     try {
       const response = await api.get(`/admin/reservation/${type}/booth/${boothId}`);
       const data = response.data;

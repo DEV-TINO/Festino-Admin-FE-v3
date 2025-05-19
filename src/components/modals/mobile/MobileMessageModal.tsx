@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useMessageStore } from '@/stores/reserve/message';
 import { useReserveModalStore } from '@/stores/reserve/reserveModalStore';
+import { ReserveData } from '@/stores/reserve/message';
 
 const MAX_MESSAGE_LENGTH = 45;
 
@@ -34,7 +35,13 @@ const MobileMessageModal: React.FC = () => {
       alert('메시지 내용을 입력해주세요.');
       return;
     }
-    sendMobileMessage(message, reserveData);
+
+    const reserveDataForSend: ReserveData = {
+      phoneNum: reserveData?.phoneNum,
+      userName: reserveData?.userName,
+    };
+
+    sendMobileMessage(message, reserveDataForSend);
   };
 
   const handleClickSave = () => {
