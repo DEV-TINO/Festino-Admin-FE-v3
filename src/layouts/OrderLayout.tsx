@@ -26,7 +26,8 @@ const OrderLayout: React.FC = () => {
   const { width } = useWindowSize();
   
   // 주문 관련 상태 및 액션 훅
-  const { boothId, orderList, setOrderStatus, getAllTableOrders } = useTableStatusOrder();
+  const { boothId, orderList, orderStatus,  setOrderStatus, getAllTableOrders } =
+      useTableStatusOrder()
 
 
   // 통계 또는 테이블 페이지 여부 상태
@@ -70,6 +71,13 @@ const OrderLayout: React.FC = () => {
 
   // 대기 중 입금 주문 리스트
   const { waitDepositList, getWaitDepositOrderList } = useDepositOrder();
+
+  useEffect(() => {
+      if (selectedBoothId) {
+          useTableStatusOrder.getState().setBoothId(selectedBoothId)
+      }
+  }, [selectedBoothId])
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -139,11 +147,14 @@ const sortedOrderList = useMemo(() => {
   }, [orderPerCol]);
 
   useEffect(() => {
-    if (!boothId) return;
-    getAllTableOrders({ boothId, date: nowDate });
-    getAllTableVisualization({ boothId, date: nowDate });
-    getTableList(boothId);
-  }, [boothId, nowDate]);
+      const targetBoothId = boothId || selectedBoothId
+      if (!targetBoothId) return
+
+      getAllTableOrders({ boothId: targetBoothId, date: nowDate })
+      getAllTableVisualization({ boothId: targetBoothId, date: nowDate })
+      getTableList(targetBoothId)
+  }, [boothId, selectedBoothId, nowDate])
+  
 
   // 페이지 경로 변경될 때 초기화 및 구분 처리
   useEffect(() => {
@@ -151,6 +162,26 @@ const sortedOrderList = useMemo(() => {
     setIsTable(pathname.includes("table"));
     setPageIndex(1); // 페이지 전환 시 첫 페이지로 초기화
   }, [pathname]);
+
+  useEffect(() => {
+      if (!selectedBoothId || !nowDate) return
+
+      getAllTableOrders({ boothId: selectedBoothId, date: nowDate })
+      getWaitDepositOrderList({ boothId: selectedBoothId, date: nowDate })
+  }, [selectedBoothId, nowDate, orderStatus])
+  
+  
+
+  useEffect(() => {
+      if (pathname.includes('realTime')) setOrderStatus('realTime')
+      else if (pathname.includes('ready')) setOrderStatus('ready')
+      else if (pathname.includes('cooking')) setOrderStatus('cooking')
+      else if (pathname.includes('finish')) setOrderStatus('finish')
+      else if (pathname.includes('cancel')) setOrderStatus('cancel')
+      else if (pathname.includes('table')) setOrderStatus('table')
+      else if (pathname.includes('statistics')) setOrderStatus('statistics')
+  }, [pathname])
+  
 
   useEffect(() => {
       if (isAdmin) {
@@ -177,7 +208,7 @@ const sortedOrderList = useMemo(() => {
           <div className='flex justify-between pt-[50px] lg:pt-[100px] min-w-[670px] gap-4'>
               <div className='flex items-center gap-4'>
                   <IconOrder />
-                  <div className='text-primary-800 text-xl md:text-2xl font-semibold'>
+                  <div className='text-primary-800 text-xl md:text-2xl font-semibold select-none'>
                       주문 조회
                   </div>
               </div>
@@ -225,8 +256,8 @@ const sortedOrderList = useMemo(() => {
           {!isStatistics && !isTable && (
               <div className='flex flex-col relative'>
                   {/* 필터 및 새로고침 버튼 */}
-                  <div className='flex justify-between items-center pb-[10px]'>
-                      <div className='flex gap-[14px]'>
+                  <div className='flex justify-between items-center pb-[10px] '>
+                      <div className='flex gap-[14px] select-none'>
                           {Object.entries(TABLE_FILTER).map(([key, value]) => (
                               <div
                                   key={key}
@@ -242,10 +273,10 @@ const sortedOrderList = useMemo(() => {
                               </div>
                           ))}
                       </div>
-                      <div className='flex gap-[14px] items-center'>
+                      <div className='flex gap-[14px] items-center select-none'>
                           <button
                               type='button'
-                              className='is-button w-[100px] h-[40px] rounded-[16px] text-sm'
+                              className='is-button w-[100px] h-[40px] rounded-[16px] text-sm select-none'
                               onClick={() => openServiceModal()}>
                               주문 추가
                           </button>
@@ -256,7 +287,7 @@ const sortedOrderList = useMemo(() => {
                   </div>
 
                   {/* 테이블 주문 카드 그리드 영역 */}
-                  <div className='bg-primary-500-light-5 rounded-2xl p-6'>
+                  <div className='bg-primary-500-light-5 rounded-2xl p-6 select-none'>
                       {/* 제목 영역 */}
                       <div className='flex justify-between items-center'>
                           <div className='w-[170px]' />
@@ -286,7 +317,7 @@ const sortedOrderList = useMemo(() => {
                       </div>
 
                       {/* 페이지네이션 영역 */}
-                      <div className='flex justify-center items-center text-xl font-medium text-secondary-900'>
+                      <div className='flex justify-center items-center text-xl font-medium text-secondary-900 select-none'>
                           {Array.from(
                               { length: maxPageIndex },
                               (_, i) => i + 1
