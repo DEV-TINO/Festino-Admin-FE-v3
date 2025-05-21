@@ -19,6 +19,10 @@ const BoothDetailPage: React.FC = () => {
   const { isAdmin, userOwnBoothId } = useUserStore()
   const isBoothOwner = isAdmin || boothId === userOwnBoothId
 
+  const { userOwnBoothId, isAdmin } = useUserStore();
+
+  const isBoothOwner = isAdmin || boothId === userOwnBoothId;
+
   const scrollContainer = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -43,37 +47,46 @@ const BoothDetailPage: React.FC = () => {
   };
 
   const handleClickSoldOut = async (menu: any) => {
-    try {
-      const response = await api.put('/admin/menu/sold-out', {
-        menuId: menu.menuId,
-        isSoldOut: menu.isSoldOut,
-        boothId: boothInfo.boothId,
-      });
-      if (response.data.success) {
-        menu.isSoldOut = response.data.data.isSoldOut;
-        updateMenuList(response.data.data.isSoldOut);
-      } else {
-        alertError(response.data.message);
+    if (isBoothOwner) {
+      try {
+        const response = await api.put('/admin/menu/sold-out', {
+          menuId: menu.menuId,
+          isSoldOut: menu.isSoldOut,
+          boothId: boothInfo.boothId,
+        });
+        if (response.data.success) {
+          menu.isSoldOut = response.data.data.isSoldOut;
+          updateMenuList(response.data.data.isSoldOut);
+        } else {
+          alertError(response.data.message);
+        }
+      } catch (error) {
+        alertError('Error updating menu status');
       }
-    } catch (error) {
-      alertError('Error updating menu status');
+    } else {
+      alert("타 학과 부스는 수정할 수 없습니다.")
     }
   };
 
   const handleClickBoothOpen = async () => {
-    try {
-      const response = await api.put(`/admin/booth/${ADMIN_CATEGORY[boothInfo.adminCategory]}/open`, {
-        boothId: boothInfo.boothId,
-        isOpen: boothInfo.isOpen,
-      });
-      if (response.data.success) {
-        updateBoothInfo({ isOpen: response.data.data.isOpen });
-      } else {
-        alertError(response.data.message);
+    if (isBoothOwner) {
+      try {
+        const response = await api.put(`/admin/booth/${ADMIN_CATEGORY[boothInfo.adminCategory]}/open`, {
+          boothId: boothInfo.boothId,
+          isOpen: boothInfo.isOpen,
+        });
+        if (response.data.success) {
+          updateBoothInfo({ isOpen: response.data.data.isOpen });
+        } else {
+          alertError(response.data.message);
+        }
+      } catch (error) {
+        alertError('Error opening booth');
       }
-    } catch (error) {
-      alertError('Error opening booth');
+    } else {
+      alert("타 학과 부스는 수정할 수 없습니다.")
     }
+
   };
 
 
@@ -91,7 +104,7 @@ const BoothDetailPage: React.FC = () => {
 
   const handleClickTableNum = (index: number) => {
     if(tableNumList[index].orderUrl) {
-      navigator.clipboard.writeText(tableNumList[index].orderUrl);
+      navigator.clipboard.writeText(tableNumList[index].orderUrl!);
       alert('QR 코드 주소가 복사되었습니다.');
     }
   };
@@ -111,7 +124,7 @@ const BoothDetailPage: React.FC = () => {
       }
     };
     fetchData();
-  }, [boothId, navigate]);
+  }, [boothId, navigate, isBoothOwner]);
 
   return (
       <div className='flex flex-col px-4 gap-[20px] min-w-[630px] pb-20'>
