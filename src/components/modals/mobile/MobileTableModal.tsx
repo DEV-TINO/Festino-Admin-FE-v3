@@ -45,7 +45,10 @@ const MobileTableCustomModal: React.FC = () => {
   };
 
   const handleClickTotalDeleteButton = () => {
-    setNewTableNumList([]);
+    setNewTableNumList([{
+      "customTableNum": "1",
+      "tableNumIndex": 1
+    }]);
   };
 
   const handleClickDeleteButton = (index: number) => {
