@@ -59,7 +59,7 @@ const MenuModal: React.FC = () => {
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
-      <div className="w-[600px] h-[640px] bg-white rounded-2xl p-10 flex flex-col justify-between">
+      <div className="w-[600px] h-[680px] bg-white rounded-2xl p-10 flex flex-col justify-between">
         <div className="w-full text-center pb-6">
           <div className="text-lg text-primary-800 font-semibold">메뉴 수정</div>
         </div>
@@ -157,7 +157,7 @@ const MenuModal: React.FC = () => {
           </div>
 
           {isNightCategory && (
-            <div className="flex items-center w-full">
+            <div className="flex items-center w-full pb-4">
               <div className="w-[80px] shrink-0 text-md">분류</div>
               <div className="flex items-center gap-[28px]">
                 <div className="w-[110px] flex gap-2 cursor-pointer text-sm" onClick={() => setMenuType('MAIN')}>
