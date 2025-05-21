@@ -12,14 +12,22 @@ import { WaitDepositOrder } from "@/types/orders/order.types";
 import IconOrder from "@/components/icons/IconOrder";
 import { useTableVisualizationDetail } from "@/stores/orders/tableVisualization";
 import { useTableDetail } from "@/stores/booths/tableDetail";
+import { useUserStore } from '@/stores/logins/userStore'
+import { useBoothList } from '@/stores/booths/boothList'
 
 const OrderLayout: React.FC = () => {
   const navigate = useNavigate();
+  const { isAdmin, userOwnBoothId } = useUserStore()
+  const { boothList, getAllBoothList } = useBoothList()
+  const [selectedBoothId, setSelectedBoothId] = useState<string>(
+      userOwnBoothId || ''
+  )
   const { pathname } = useLocation();
   const { width } = useWindowSize();
   
   // 주문 관련 상태 및 액션 훅
   const { boothId, orderList, setOrderStatus, getAllTableOrders } = useTableStatusOrder();
+
 
   // 통계 또는 테이블 페이지 여부 상태
   const [isStatistics, setIsStatistics] = useState(false);
@@ -144,6 +152,19 @@ const sortedOrderList = useMemo(() => {
     setPageIndex(1); // 페이지 전환 시 첫 페이지로 초기화
   }, [pathname]);
 
+  useEffect(() => {
+      if (isAdmin) {
+          getAllBoothList().then((list) => {
+              if (list.length > 0) {
+                  setSelectedBoothId(list[0].boothId)
+              }
+          })
+      } else {
+          setSelectedBoothId(userOwnBoothId)
+      }
+  }, [isAdmin])
+  
+
   // 카테고리 버튼 클릭 시 상태 설정 및 이동
   const handleCategoryClick = (key: string) => {
     setOrderStatus(key);
@@ -151,112 +172,145 @@ const sortedOrderList = useMemo(() => {
   };
 
   return (
-    <div className="flex flex-col px-4 gap-[40px] min-w-[630px] pb-20">
-      {/* 상단 헤더 */}
-      <div className="flex justify-between pt-[50px] lg:pt-[100px] min-w-[670px] gap-4">
-        <div className="flex items-center gap-4">
-          <IconOrder />
-          <div className="text-primary-800 text-xl md:text-2xl font-semibold">주문 조회</div>
-        </div>
-      </div>
-
-      {/* 주문 카테고리 버튼 */}
-      <div className="flex gap-[10px] overflow-x-auto">
-        {Object.entries(ORDER_CATEGORY).map(([key, label]) => (
-          <button
-            key={key}
-            type="button"
-            onClick={() => handleCategoryClick(key)}
-            className={`is-button w-[120px] h-[40px] text-sm rounded-[16px] select-none ${
-              !pathname.includes(key) ? "is-outlined" : ""
-            }`}
-          >
-            <div className="relative">
-              {label}
-              {key === 'realTime' && isNewOrderExist && (
-                <div className="absolute bg-danger-800 w-3 h-3 rounded-full top-[4px] right-4"></div>
-              )}
-            </div>
-          </button>
-        ))}
-      </div>
-
-      {/* 통계 및 테이블 페이지가 아닌 경우에만 표시 */}
-      {!isStatistics && !isTable && (
-        <div className="flex flex-col relative">
-          {/* 필터 및 새로고침 버튼 */}
-          <div className="flex justify-between items-center pb-[10px]">
-            <div className="flex gap-[14px]">
-              {Object.entries(TABLE_FILTER).map(([key, value]) => (
-                <div
-                  key={key}
-                  className={`cursor-pointer hover:text-secondary-800 text-sm ${
-                    selectedFilterMenu === key ? "font-bold text-secondary-800" : "text-secondary-600"
-                  }`}
-                  onClick={() => {
-                    setSelectedFilterMenu(key);
-                  }}
-                >
-                  {value}
-                </div>
-              ))}
-            </div>
-            <div className="flex gap-[14px] items-center">
-              <button 
-                type="button"
-                className="is-button w-[100px] h-[40px] rounded-[16px] text-sm"
-                onClick={() => openServiceModal()}
-              >
-                주문 추가
-              </button>
-              <IconRefresh onClick={() => handleClickTableRefresh()} />
-            </div>
-          </div>
-
-          {/* 테이블 주문 카드 그리드 영역 */}
-          <div className="bg-primary-500-light-5 rounded-2xl p-6">
-            {/* 제목 영역 */}
-            <div className="flex justify-between items-center">
-              <div className="w-[170px]" />
-              <div className="font-bold text-primary-800 text-xl">테이블 주문 현황</div>
-              <div className="w-[170px] h-[50px] bg-white rounded-2xl flex justify-center items-center gap-2">
-                <div className="text-primary-800-light-50 text-[16px] font-bold">현재 주문 수</div>
-                <div className="text-[20px] font-bold text-primary-800">{orderList.length}개</div>
+      <div className='flex flex-col px-4 gap-[40px] min-w-[630px] pb-20'>
+          {/* 상단 헤더 */}
+          <div className='flex justify-between pt-[50px] lg:pt-[100px] min-w-[670px] gap-4'>
+              <div className='flex items-center gap-4'>
+                  <IconOrder />
+                  <div className='text-primary-800 text-xl md:text-2xl font-semibold'>
+                      주문 조회
+                  </div>
               </div>
-            </div>
 
-            {/* 주문 카드 목록 */}
-            <div 
-              className="py-7 grid gap-x-[22px] gap-y-4 place-items-center grid-rows-2"
-              style={gridColumnStyle}
-            >
-              {pagedOrders.map((tableOrder, index) => (
-                <TableOrderItem key={index} tableOrder={tableOrder} />
-              ))}
-            </div>
-
-            {/* 페이지네이션 영역 */}
-            <div className="flex justify-center items-center text-xl font-medium text-secondary-900">
-              {Array.from({ length: maxPageIndex }, (_, i) => i + 1).map((page) => (
-                <div
-                  key={page}
-                  onClick={() => setPageIndex(page)}
-                  className={`w-10 h-10 flex justify-center items-center cursor-pointer ${
-                    pageIndex === page ? "bg-primary-800-light-86 text-white rounded-full" : ""
-                  }`}
-                >
-                  {page}
-                </div>
-              ))}
-            </div>
+              {isAdmin && (
+                  <div className='flex justify-between min-w-[420px] items-center gap-4'>
+                      <div className='flex-shrink-0 text-xl font-semibold'>
+                          학과 선택:
+                      </div>
+                      <select
+                          className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
+                          value={selectedBoothId}
+                          onChange={(e) => setSelectedBoothId(e.target.value)}>
+                          {boothList.map((booth, index) => (
+                              <option key={index} value={booth.boothId}>
+                                  {booth.adminName} - {booth.boothName}
+                              </option>
+                          ))}
+                      </select>
+                  </div>
+              )}
           </div>
-        </div>
-      )}
 
-      {/* 라우터에서 연결된 하위 컴포넌트 출력 */}
-      <Outlet />
-    </div>
-  );
+          {/* 주문 카테고리 버튼 */}
+          <div className='flex gap-[10px] overflow-x-auto'>
+              {Object.entries(ORDER_CATEGORY).map(([key, label]) => (
+                  <button
+                      key={key}
+                      type='button'
+                      onClick={() => handleCategoryClick(key)}
+                      className={`is-button w-[120px] h-[40px] text-sm rounded-[16px] select-none ${
+                          !pathname.includes(key) ? 'is-outlined' : ''
+                      }`}>
+                      <div className='relative'>
+                          {label}
+                          {key === 'realTime' && isNewOrderExist && (
+                              <div className='absolute bg-danger-800 w-3 h-3 rounded-full top-[4px] right-4'></div>
+                          )}
+                      </div>
+                  </button>
+              ))}
+          </div>
+
+          {/* 통계 및 테이블 페이지가 아닌 경우에만 표시 */}
+          {!isStatistics && !isTable && (
+              <div className='flex flex-col relative'>
+                  {/* 필터 및 새로고침 버튼 */}
+                  <div className='flex justify-between items-center pb-[10px]'>
+                      <div className='flex gap-[14px]'>
+                          {Object.entries(TABLE_FILTER).map(([key, value]) => (
+                              <div
+                                  key={key}
+                                  className={`cursor-pointer hover:text-secondary-800 text-sm ${
+                                      selectedFilterMenu === key
+                                          ? 'font-bold text-secondary-800'
+                                          : 'text-secondary-600'
+                                  }`}
+                                  onClick={() => {
+                                      setSelectedFilterMenu(key)
+                                  }}>
+                                  {value}
+                              </div>
+                          ))}
+                      </div>
+                      <div className='flex gap-[14px] items-center'>
+                          <button
+                              type='button'
+                              className='is-button w-[100px] h-[40px] rounded-[16px] text-sm'
+                              onClick={() => openServiceModal()}>
+                              주문 추가
+                          </button>
+                          <IconRefresh
+                              onClick={() => handleClickTableRefresh()}
+                          />
+                      </div>
+                  </div>
+
+                  {/* 테이블 주문 카드 그리드 영역 */}
+                  <div className='bg-primary-500-light-5 rounded-2xl p-6'>
+                      {/* 제목 영역 */}
+                      <div className='flex justify-between items-center'>
+                          <div className='w-[170px]' />
+                          <div className='font-bold text-primary-800 text-xl'>
+                              테이블 주문 현황
+                          </div>
+                          <div className='w-[170px] h-[50px] bg-white rounded-2xl flex justify-center items-center gap-2'>
+                              <div className='text-primary-800-light-50 text-[16px] font-bold'>
+                                  현재 주문 수
+                              </div>
+                              <div className='text-[20px] font-bold text-primary-800'>
+                                  {orderList.length}개
+                              </div>
+                          </div>
+                      </div>
+
+                      {/* 주문 카드 목록 */}
+                      <div
+                          className='py-7 grid gap-x-[22px] gap-y-4 place-items-center grid-rows-2'
+                          style={gridColumnStyle}>
+                          {pagedOrders.map((tableOrder, index) => (
+                              <TableOrderItem
+                                  key={index}
+                                  tableOrder={tableOrder}
+                              />
+                          ))}
+                      </div>
+
+                      {/* 페이지네이션 영역 */}
+                      <div className='flex justify-center items-center text-xl font-medium text-secondary-900'>
+                          {Array.from(
+                              { length: maxPageIndex },
+                              (_, i) => i + 1
+                          ).map((page) => (
+                              <div
+                                  key={page}
+                                  onClick={() => setPageIndex(page)}
+                                  className={`w-10 h-10 flex justify-center items-center cursor-pointer ${
+                                      pageIndex === page
+                                          ? 'bg-primary-800-light-86 text-white rounded-full'
+                                          : ''
+                                  }`}>
+                                  {page}
+                              </div>
+                          ))}
+                      </div>
+                  </div>
+              </div>
+          )}
+
+          {/* 라우터에서 연결된 하위 컴포넌트 출력 */}
+          <Outlet />
+      </div>
+  )
 };
 
 export default OrderLayout;
