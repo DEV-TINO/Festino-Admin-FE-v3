@@ -16,11 +16,8 @@ const BoothDetailPage: React.FC = () => {
   const { reset, init, boothInfo, menuList, updateBoothInfo, updateMenuList } = useBoothDetail();
   const { tableNum, tableNumList } = useTableDetail();
   const { boothId } = useParams<{ boothId: string }>();
-  const { isAdmin, userOwnBoothId } = useUserStore()
-  const isBoothOwner = isAdmin || boothId === userOwnBoothId
 
   const { userOwnBoothId, isAdmin } = useUserStore();
-
   const isBoothOwner = isAdmin || boothId === userOwnBoothId;
 
   const scrollContainer = useRef<HTMLDivElement>(null);
