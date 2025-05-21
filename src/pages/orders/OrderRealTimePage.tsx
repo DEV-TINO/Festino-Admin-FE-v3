@@ -104,7 +104,7 @@ const OrderRealTimePage: React.FC = () => {
           ) : (
             <div className="flex flex-col justify-center items-center">
               <IconNotFound width={200} />
-              <div className="text-md text-gray-500 pt-3">{emptyTextMap[type]}</div>
+              <div className="text-md text-gray-500 pt-3 select-none">{emptyTextMap[type]}</div>
             </div>
           )}
         </div>
