@@ -10,12 +10,12 @@ const MenuModal: React.FC = () => {
   const { submitModal, closeModal, menuInfo, setMenuInfo } = useMenuModal();
   const { boothInfo } = useBoothDetail();
 
-  const [isMainMenu, setIsMainMenu] = useState(true);
+  const [menuType, setMenuType] = useState<'MAIN' | 'SUB' | 'CALLSERVICE'>('MAIN');
   const [isSubmit, setIsSubmit] = useState(false);
   const submitRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    setIsMainMenu(menuInfo.menuType === 'MAIN');
+    setMenuType(menuInfo.menuType as 'MAIN' | 'SUB' | 'CALLSERVICE');
     submitRef.current?.focus();
   }, [menuInfo.menuType]);
 
@@ -39,10 +39,9 @@ const MenuModal: React.FC = () => {
     setIsSubmit(true);
     const { menuName, menuPrice, menuDescription } = menuInfo;
     if (!menuName || !menuPrice || !menuDescription) return;
-
     setMenuInfo({
       ...menuInfo,
-      menuType: isMainMenu ? 'MAIN' : 'SUB',
+      menuType,
     });
     submitModal();
     setIsSubmit(false);
@@ -159,15 +158,19 @@ const MenuModal: React.FC = () => {
 
           {isNightCategory && (
             <div className="flex items-center w-full">
-              <div className="w-[80px] shrink-0"></div>
+              <div className="w-[80px] shrink-0 text-md">분류</div>
               <div className="flex items-center gap-[28px]">
-                <div className="w-[110px] flex gap-2 cursor-pointer text-sm" onClick={() => setIsMainMenu(true)}>
-                  <IconRadio isActive={isMainMenu} />
+                <div className="w-[110px] flex gap-2 cursor-pointer text-sm" onClick={() => setMenuType('MAIN')}>
+                  <IconRadio isActive={menuType === 'MAIN'} />
                   <div>메인 메뉴</div>
                 </div>
-                <div className="w-[110px] flex gap-2 cursor-pointer text-sm" onClick={() => setIsMainMenu(false)}>
-                  <IconRadio isActive={!isMainMenu} />
+                <div className="w-[110px] flex gap-2 cursor-pointer text-sm" onClick={() => setMenuType('SUB')}>
+                  <IconRadio isActive={menuType === 'SUB'} />
                   <div>서브 메뉴</div>
+                </div>
+                <div className="w-[120px] flex gap-2 cursor-pointer text-sm" onClick={() => setMenuType('CALLSERVICE')}>
+                  <IconRadio isActive={menuType === 'CALLSERVICE'} />
+                  <div>직원 호출</div>
                 </div>
               </div>
             </div>

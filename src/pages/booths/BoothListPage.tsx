@@ -54,9 +54,6 @@ const BoothListPage: React.FC = () => {
           <IconBoothList />
           <div className="text-primary-800 text-xl md:text-2xl font-semibold">부스 리스트</div>
         </div>
-        <button className="hover:bg-primary-800 font-semibold w-[60px] h-[35px] rounded-xl text-sm text-white bg-primary-800 cursor-pointer">
-          등록
-        </button>
       </div>
 
       {/* Table */}
