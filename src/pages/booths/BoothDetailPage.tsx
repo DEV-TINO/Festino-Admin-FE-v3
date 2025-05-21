@@ -10,11 +10,16 @@ import { alertError, api } from '@/utils/api';
 import { ADMIN_CATEGORY, MENU_TYPE } from '@/constants/constant';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { useUserStore } from '@/stores/logins/userStore';
 
 const BoothDetailPage: React.FC = () => {
   const { reset, init, boothInfo, menuList, updateBoothInfo, updateMenuList } = useBoothDetail();
   const { tableNum, tableNumList } = useTableDetail();
   const { boothId } = useParams<{ boothId: string }>();
+
+  const { userOwnBoothId, isAdmin } = useUserStore();
+
+  const isBoothOwner = isAdmin || boothId === userOwnBoothId;
 
   const scrollContainer = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -40,37 +45,46 @@ const BoothDetailPage: React.FC = () => {
   };
 
   const handleClickSoldOut = async (menu: any) => {
-    try {
-      const response = await api.put('/admin/menu/sold-out', {
-        menuId: menu.menuId,
-        isSoldOut: menu.isSoldOut,
-        boothId: boothInfo.boothId,
-      });
-      if (response.data.success) {
-        menu.isSoldOut = response.data.data.isSoldOut;
-        updateMenuList(response.data.data.isSoldOut);
-      } else {
-        alertError(response.data.message);
+    if (isBoothOwner) {
+      try {
+        const response = await api.put('/admin/menu/sold-out', {
+          menuId: menu.menuId,
+          isSoldOut: menu.isSoldOut,
+          boothId: boothInfo.boothId,
+        });
+        if (response.data.success) {
+          menu.isSoldOut = response.data.data.isSoldOut;
+          updateMenuList(response.data.data.isSoldOut);
+        } else {
+          alertError(response.data.message);
+        }
+      } catch (error) {
+        alertError('Error updating menu status');
       }
-    } catch (error) {
-      alertError('Error updating menu status');
+    } else {
+      alert("타 학과 부스는 수정할 수 없습니다.")
     }
   };
 
   const handleClickBoothOpen = async () => {
-    try {
-      const response = await api.put(`/admin/booth/${ADMIN_CATEGORY[boothInfo.adminCategory]}/open`, {
-        boothId: boothInfo.boothId,
-        isOpen: boothInfo.isOpen,
-      });
-      if (response.data.success) {
-        updateBoothInfo({ isOpen: response.data.data.isOpen });
-      } else {
-        alertError(response.data.message);
+    if (isBoothOwner) {
+      try {
+        const response = await api.put(`/admin/booth/${ADMIN_CATEGORY[boothInfo.adminCategory]}/open`, {
+          boothId: boothInfo.boothId,
+          isOpen: boothInfo.isOpen,
+        });
+        if (response.data.success) {
+          updateBoothInfo({ isOpen: response.data.data.isOpen });
+        } else {
+          alertError(response.data.message);
+        }
+      } catch (error) {
+        alertError('Error opening booth');
       }
-    } catch (error) {
-      alertError('Error opening booth');
+    } else {
+      alert("타 학과 부스는 수정할 수 없습니다.")
     }
+
   };
 
 
@@ -80,7 +94,7 @@ const BoothDetailPage: React.FC = () => {
 
   const handleClickTableNum = (index: number) => {
     if(tableNumList[index].orderUrl) {
-      navigator.clipboard.writeText(tableNumList[index].orderUrl);
+      navigator.clipboard.writeText(tableNumList[index].orderUrl!);
       alert('QR 코드 주소가 복사되었습니다.');
     }
   };
@@ -100,7 +114,7 @@ const BoothDetailPage: React.FC = () => {
       }
     };
     fetchData();
-  }, [boothId, navigate]);
+  }, [boothId, navigate, isBoothOwner]);
 
   return (
     <div className="flex flex-col px-4 gap-[20px] min-w-[630px] pb-20">
@@ -110,13 +124,15 @@ const BoothDetailPage: React.FC = () => {
             <IconBoothInfo />
             <div className="text-primary-800 text-xl md:text-2xl font-semibold">{boothInfo?.adminName} 부스 정보</div>
           </div>
-          <button
-            className="is-button font-semibold w-[60px] h-[35px] rounded-xl text-sm flex items-center justify-center text-white lg:text-md bg-primary-800 cursor-pointer select-none hover:bg-primary-900"
-            type="button"
-            onClick={() => handleClickBoothEdit()}
-          >
-            수정
-          </button>
+          { isBoothOwner && (
+            <button
+              className="is-button font-semibold w-[60px] h-[35px] rounded-xl text-sm flex items-center justify-center text-white lg:text-md bg-primary-800 cursor-pointer select-none hover:bg-primary-900"
+              type="button"
+              onClick={() => handleClickBoothEdit()}
+            >
+              수정
+            </button>
+          )}
         </div>
         <div className="bg-white rounded-2xl w-full h-auto px-4 py-4 pb-12 gap-10 lg:py-[60px] lg:px-[60px] lg:gap-[60px] flex flex-col text-secondary-700 shadow-xs">
           <div className="flex flex-col gap-[20px] w-full">
