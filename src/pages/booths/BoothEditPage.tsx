@@ -373,7 +373,7 @@ const BoothEditPage: React.FC = () => {
     setIsKakaoPay(boothInfo.isKakaoPay);
     setIsTossPay(boothInfo.isTossPay);
     setFileUrls(boothInfo.boothImage);
-  }, [boothId, navigate, boothInfo.openTime, boothInfo.closeTime]);
+  }, [boothId, navigate]);
 
   return (
     <div className="flex flex-col px-4 min-w-[630px] pb-20">
