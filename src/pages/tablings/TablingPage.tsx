@@ -277,7 +277,7 @@ const TablingPage: React.FC = () => {
           <div className='flex flex-col justify-between pt-[100px] gap-4 lg:flex-row pb-8'>
               <div className='flex items-center gap-4'>
                   <IconReservation />
-                  <div className='text-primary-800 text-xl md:text-2xl font-semibold'>
+                  <div className='text-primary-800 text-xl md:text-2xl font-semibold select-none'>
                       {selectBooth?.adminName} 예약 현황
                   </div>
               </div>
@@ -402,7 +402,7 @@ const TablingPage: React.FC = () => {
           {/* 목록 */}
           <div className='relative overflow-x-auto outline outline-1 outline-primary-400 rounded-2xl shadow-secondary'>
               <table className='w-full text-xs lg:text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400'>
-                  <thead className='text-xs lg:text-sm uppercase bg-primary-50 border-b-1 border-secondary-200'>
+                  <thead className='text-xs lg:text-sm uppercase bg-primary-50 border-b-1 border-secondary-200 select-none'>
                       <tr>
                           <th
                               scope='col'
@@ -442,7 +442,7 @@ const TablingPage: React.FC = () => {
                           </th>
                       </tr>
                   </thead>
-                  <tbody className='text-xs lg:text-sm'>
+                  <tbody className='text-xs lg:text-sm select-none'>
                       {!isLoading &&
                           selectBooth?.isReservation &&
                           getFilteredReserveList(selectOrderType).map(
