@@ -85,7 +85,6 @@ const ServiceOrderModal: React.FC = () => {
       return next;
     });
   };
-  
 
   // 메뉴 선택
   const selectMenus = (menu: MenuItem) => {
