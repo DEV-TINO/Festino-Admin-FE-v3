@@ -2,7 +2,7 @@ import React from 'react';
 
 const IconRecipe: React.FC = () => {
   return (
-    <div className="cursor-none">
+    <div>
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M15.5819 2.79688H6.83689C5.87094 2.79688 5.08789 3.57993 5.08789 4.54588V16.7889C5.08789 17.7548 5.87094 18.5379 6.83689 18.5379H15.5819C16.5478 18.5379 17.3309 17.7548 17.3309 16.7889V4.54588C17.3309 3.57993 16.5478 2.79688 15.5819 2.79688Z"
