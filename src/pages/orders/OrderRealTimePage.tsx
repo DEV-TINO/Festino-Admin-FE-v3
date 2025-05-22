@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTableStatusOrder } from '@/stores/orders/tableStatusOrder';
 import { useDate } from '@/stores/commons/date';
 import IconNotFound from '@/components/icons/IconNotFound';
