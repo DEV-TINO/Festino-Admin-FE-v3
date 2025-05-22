@@ -111,21 +111,21 @@ const OrderLayout: React.FC = () => {
   // 최대 페이지 수 계산
   const maxPageIndex = Math.ceil(orderList.length / orderPerPage);
 
-// 정렬된 리스트는 useMemo로 처리
-const sortedOrderList = useMemo(() => {
-  return [...orderList].sort((a, b) => {
-    const dateA = a.createAt ? new Date(a.createAt).getTime() : 0;
-    const dateB = b.createAt ? new Date(b.createAt).getTime() : 0;
+  // 정렬된 리스트는 useMemo로 처리
+  const sortedOrderList = useMemo(() => {
+    return [...orderList].sort((a, b) => {
+      const dateA = a.createAt ? new Date(a.createAt).getTime() : 0;
+      const dateB = b.createAt ? new Date(b.createAt).getTime() : 0;
 
-    if (selectedFilterMenu === 'timeAsc') {
-      return dateB - dateA;
-    } else if (selectedFilterMenu === 'timeDesc') {
-      return dateA - dateB;
-    }
+      if (selectedFilterMenu === 'timeAsc') {
+        return dateB - dateA;
+      } else if (selectedFilterMenu === 'timeDesc') {
+        return dateA - dateB;
+      }
 
-    return 0;
-  });
-}, [orderList, selectedFilterMenu]);
+      return 0;
+    });
+  }, [orderList, selectedFilterMenu]);
 
   // 현재 페이지에 표시할 주문 목록 슬라이싱
   const pagedOrders = useMemo(() => {

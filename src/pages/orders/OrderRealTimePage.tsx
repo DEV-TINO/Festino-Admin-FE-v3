@@ -45,20 +45,25 @@ const OrderRealTimePage: React.FC = () => {
     }
   }, [waitDepositList, boothId]);
   
-  useLayoutEffect(() => {
-    if (boothId && nowDate) {
-      getAllOrderList();
-    }
-  }, [boothId, nowDate]);
-  
   useEffect(() => {
     if (!isFirstLoad && !isLoading) {
       intervalRef.current = setInterval(() => {
         getAllOrderList();
-      }, 3000);
+      }, 1000);
     }
     return () => clearInterval(intervalRef.current!);
   }, [boothId, nowDate, isLoading]);
+
+  useEffect(() => {
+    const handleFocus = () => {
+      getAllOrderList();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [boothId, nowDate]);
 
   const renderCardSection = (type: string, data: any[]) => {
     const bgMap: Record<string, string> = {
