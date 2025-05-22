@@ -162,35 +162,34 @@ const sortedOrderList = useMemo(() => {
   }, [pathname]);
 
   useEffect(() => {
-      if (!selectedBoothId || !nowDate) return
+    if (!selectedBoothId || !nowDate) return
 
-      getAllTableOrders({ boothId: selectedBoothId, date: nowDate })
-      getNowOrderList({ boothId: selectedBoothId, date: nowDate })
+    getAllTableOrders({ boothId: selectedBoothId, date: nowDate })
+    getNowOrderList({ boothId: selectedBoothId, date: nowDate })
   }, [selectedBoothId, nowDate, orderStatus])
 
   useEffect(() => {
-      if (pathname.includes('realTime')) setOrderStatus('realTime')
-      else if (pathname.includes('ready')) setOrderStatus('ready')
-      else if (pathname.includes('cooking')) setOrderStatus('cooking')
-      else if (pathname.includes('finish')) setOrderStatus('finish')
-      else if (pathname.includes('cancel')) setOrderStatus('cancel')
-      else if (pathname.includes('table')) setOrderStatus('table')
-      else if (pathname.includes('statistics')) setOrderStatus('statistics')
+    if (pathname.includes('realTime')) setOrderStatus('realTime')
+    else if (pathname.includes('ready')) setOrderStatus('ready')
+    else if (pathname.includes('cooking')) setOrderStatus('cooking')
+    else if (pathname.includes('finish')) setOrderStatus('finish')
+    else if (pathname.includes('cancel')) setOrderStatus('cancel')
+    else if (pathname.includes('table')) setOrderStatus('table')
+    else if (pathname.includes('statistics')) setOrderStatus('statistics')
   }, [pathname])
   
 
   useEffect(() => {
-      if (isAdmin) {
-          getAllBoothList().then((list) => {
-              if (list.length > 0) {
-                  setSelectedBoothId(list[0].boothId)
-              }
-          })
-      } else {
-          setSelectedBoothId(userOwnBoothId)
-      }
+    if (isAdmin) {
+      getAllBoothList().then((list) => {
+        if (list.length > 0) {
+          setSelectedBoothId(list[0].boothId)
+        }
+      })
+    } else {
+      setSelectedBoothId(userOwnBoothId)
+    }
   }, [isAdmin])
-  
 
   // 카테고리 버튼 클릭 시 상태 설정 및 이동
   const handleCategoryClick = (key: string) => {
