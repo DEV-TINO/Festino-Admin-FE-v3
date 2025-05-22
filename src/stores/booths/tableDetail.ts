@@ -33,7 +33,7 @@ export const useTableDetail = create<TableDetailState>()((set, get) => ({
           tableNum: res.data.data.length,
         });
       } else {
-        return;
+        // alertError(res.data.message);
       }
     } catch (error) {
       alertError(error);
