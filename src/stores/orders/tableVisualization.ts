@@ -29,6 +29,19 @@ export const useTableVisualizationDetail = create<TableVisualizationStore>((set)
       }
     },
 
+    updateTablePriority: async (boothId: string, tableNumPriorityList: { tableNumIndex: number, tablePriority: number }[]) => {
+      try {
+        const response = await api.put('/admin/order/table/priority', {
+          boothId,
+          tableNumPriorityList,
+        });
+        return response.data.success;
+      } catch (error) {
+        console.error('테이블 우선순위 업데이트 실패', error);
+        return false;
+      }
+    },
+
     openTableVisualDetail: ({ tableNumIndex }) => {
       set({ selectedTableNumIndex: tableNumIndex });
       baseModal.setModalType('tableVisualizationModal');

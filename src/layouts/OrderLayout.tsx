@@ -19,16 +19,12 @@ const OrderLayout: React.FC = () => {
   const navigate = useNavigate();
   const { isAdmin, userOwnBoothId } = useUserStore()
   const { boothList, getAllBoothList } = useBoothList()
-  const [selectedBoothId, setSelectedBoothId] = useState<string>(
-      userOwnBoothId || ''
-  )
+  const [selectedBoothId, setSelectedBoothId] = useState<string>(userOwnBoothId || '')
   const { pathname } = useLocation();
   const { width } = useWindowSize();
   
   // 주문 관련 상태 및 액션 훅
-  const { boothId, orderList, orderStatus,  setOrderStatus, getAllTableOrders } =
-      useTableStatusOrder()
-
+  const { boothId, orderList, orderStatus,  setOrderStatus, getAllTableOrders } = useTableStatusOrder()
 
   // 통계 또는 테이블 페이지 여부 상태
   const [isStatistics, setIsStatistics] = useState(false);
@@ -45,7 +41,7 @@ const OrderLayout: React.FC = () => {
   
   const { nowDate } = useDate();
   const { openServiceModal } = useServiceModal();
-  const { getAllTableVisualization, initSelectedTableNum } = useTableVisualizationDetail();
+  const { initSelectedTableNum } = useTableVisualizationDetail();
   const { getTableList } = useTableDetail();
 
   // 화면 너비에 따라 한 행에 표시할 카드 수 계산
@@ -62,7 +58,6 @@ const OrderLayout: React.FC = () => {
     const interval = setInterval(() => {
       if (boothId) {
         getAllTableOrders({ boothId, date: nowDate });
-        getAllTableVisualization({ boothId, date: nowDate });
         getTableList(boothId);
       }
     }, 3000);
@@ -107,7 +102,6 @@ const OrderLayout: React.FC = () => {
   // 테이블 새로고침 버튼 클릭 시
   const handleClickTableRefresh = async () => {
     await getAllTableOrders({ boothId, date: nowDate });
-    await getAllTableVisualization({ boothId, date: nowDate });
     await getTableList(boothId);
   };
 
@@ -150,7 +144,6 @@ const sortedOrderList = useMemo(() => {
       if (!targetBoothId) return
 
       getAllTableOrders({ boothId: targetBoothId, date: nowDate })
-      getAllTableVisualization({ boothId: targetBoothId, date: nowDate })
       getTableList(targetBoothId)
   }, [boothId, selectedBoothId, nowDate])
 

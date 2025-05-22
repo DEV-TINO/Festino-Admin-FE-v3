@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TableCard from "@/components/orders/TableCard";
 import { useTableVisualizationDetail } from "@/stores/orders/tableVisualization";
 import { useDate } from "@/stores/commons/date";
@@ -11,8 +11,9 @@ const OrderTablePage: React.FC = () => {
   const [cards, setCards] = useState<TableItemType[]>([]);
   const [originalCards, setOriginalCards] = useState<TableItemType[]>([]);
 
-  const { tableList, getAllTableVisualization } = useTableVisualizationDetail();
+  const { tableList, getAllTableVisualization, updateTablePriority } = useTableVisualizationDetail();
   const { nowDate } = useDate();
+  const didFetchRef = useRef(false);
 
   const getCookie = (name: string): string | undefined => {
     return document.cookie
@@ -52,23 +53,44 @@ const OrderTablePage: React.FC = () => {
     setIsEditing(false);
   };
 
-  const handleSave = () => {
-    // 로컬 스토리지에 사용자가 선택한 열 저장
-    localStorage.setItem('tableCols', String(cols));
-    setIsEditing(false);
+  const handleSave = async () => {
+    const boothIdFromCookie = getCookie('boothId');
+    if (!boothIdFromCookie) {
+      alert("부스 정보가 없습니다.");
+      return;
+    }
+
+    // 순서대로 우선순위 매기기
+    const tableNumPriorityList = cards.map((card, index) => ({
+      tableNumIndex: card.tableNumIndex,
+      tablePriority: index + 1,
+    }));
+
+    const success = await updateTablePriority(boothIdFromCookie, tableNumPriorityList);
+
+    if (success) {
+      alert("테이블 우선순위가 저장되었습니다.");
+      setIsEditing(false);
+      localStorage.setItem('tableCols', String(cols));
+    } else {
+      alert("저장에 실패했습니다.");
+    }
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (isEditing || didFetchRef.current) return;
+
     const boothIdFromCookie = getCookie('boothId');
     if (boothIdFromCookie) {
       getAllTableVisualization({ boothId: boothIdFromCookie, date: nowDate });
+      didFetchRef.current = true; // 최초 1회만 허용
     }
 
     const col = localStorage.getItem('tableCols');
     if (col) {
       setCols(Number(col));
     }
-  }, [nowDate]);
+  }, [nowDate, isEditing]);
 
   useEffect(() => {
     setCards(tableList);
