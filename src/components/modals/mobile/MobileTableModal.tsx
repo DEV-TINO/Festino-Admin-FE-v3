@@ -6,7 +6,7 @@ import { useBaseModal } from '@/stores/commons/baseModal';
 
 interface TableItem {
   customTableNum: string;
-  tableNumIndex: number;
+  tableNumIndex: number | null;
 }
 
 const MobileTableCustomModal: React.FC = () => {
