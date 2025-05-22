@@ -19,7 +19,6 @@ export const useNowOrderStore = create<NowOrderStore>((set) => ({
 
     try {
       const res = await api.get(`/admin/booth/${boothId}/order/now/all/${date}`);
-      console.log(res)
 
       if (res.data?.data) {
         const { waitDepositList, cookingList, finishList } = res.data.data;

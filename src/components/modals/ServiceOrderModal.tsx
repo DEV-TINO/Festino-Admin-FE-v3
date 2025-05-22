@@ -170,7 +170,6 @@ const ServiceOrderModal: React.FC = () => {
 
   // 메뉴 수량 감소
   const handleClickMenuMinus = (tableNum: string, menu: MenuItem) => {
-    console.log('click minus')
     const tableIndex = Number(tableNum);
     const currentOrders = [...(orderList[tableIndex] || [])];
   
@@ -191,7 +190,6 @@ const ServiceOrderModal: React.FC = () => {
 
   // 메뉴 수량 증가
   const handleClickMenuPlus = (tableNum: string, menu: MenuItem) => {
-    console.log('click plus')
     const tableIndex = Number(tableNum);
     const currentOrders = [...(orderList[tableIndex] || [])];
   
@@ -212,7 +210,6 @@ const ServiceOrderModal: React.FC = () => {
 
   // 주문 삭제
   const handleClickDeleteOrder = (tableNum: string, menu: MenuItem) => {
-    console.log('click delete')
     const tableIndex = Number(tableNum);
     const currentOrders = [...(orderList[tableIndex] || [])];
   

@@ -82,7 +82,7 @@ const OrderFinishCard: React.FC<OrderFinishCardProps> = (props) => {
           </div>
         </div>
       ) : (
-        <div className="w-full min-w-[350px] h-[92px] rounded-3xl flex justify-between items-center outline outline-1 outline-success-800-light-70 bg-success-50 px-6">
+        <div className="w-[350px] min-w-[350px] h-[92px] rounded-3xl flex justify-between items-center outline outline-1 outline-success-800-light-70 bg-success-50 px-6">
           <div className="w-full flex flex-col justify-center text-secondary-700 font-medium gap-[11px]">
             <div className="flex gap-[11px] items-center">
               <div className="flex items-center gap-[2px]">

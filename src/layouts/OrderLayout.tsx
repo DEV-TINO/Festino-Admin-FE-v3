@@ -153,7 +153,6 @@ const sortedOrderList = useMemo(() => {
       getAllTableVisualization({ boothId: targetBoothId, date: nowDate })
       getTableList(targetBoothId)
   }, [boothId, selectedBoothId, nowDate])
-  
 
   // 페이지 경로 변경될 때 초기화 및 구분 처리
   useEffect(() => {
