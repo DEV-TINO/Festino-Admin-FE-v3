@@ -1,5 +1,5 @@
 export interface TableItem {
-  tableNumIndex: number;
+  tableNumIndex: number | null;
   customTableNum: string | number;
 }
 

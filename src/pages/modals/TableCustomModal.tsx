@@ -26,13 +26,13 @@ const TableCustomModal: React.FC = () => {
   };
 
   const handleClickAddTableButton = async (num: number) => {
-    let newIndex = newTableNumList.length;
-    const newItems = num === 1
-      ? [{ customTableNum: '', tableNumIndex: newIndex }]
-      : Array(10).fill(null).map(() => ({ customTableNum: '', tableNumIndex: newIndex++ }));
-
+    const newItems = Array(num).fill(null).map(() => ({
+      customTableNum: '',
+      tableNumIndex: null,
+    }));
+  
     setNewTableNumList(prev => [...prev, ...newItems]);
-
+  
     await new Promise(resolve => setTimeout(resolve));
     const lastIndex = newTableNumList.length + newItems.length - 1;
     document.getElementById(`table-${lastIndex}`)?.scrollIntoView({
@@ -42,10 +42,7 @@ const TableCustomModal: React.FC = () => {
   };
 
   const handleClickTotalDeleteButton = () => {
-    setNewTableNumList([{
-      "customTableNum": "1",
-      "tableNumIndex": 1
-    }]);
+    setNewTableNumList([]);
   };
 
   const handleClickDeleteButton = (index: number) => {
@@ -58,6 +55,7 @@ const TableCustomModal: React.FC = () => {
     const updated = newTableNumList.map((table, index) => ({
       ...table,
       customTableNum: table.customTableNum || `${index + 1}`,
+      tableNumIndex: table.tableNumIndex ?? null,
     }));
     setTableNumList(updated);
     setTableNum(updated.length);
@@ -78,25 +76,13 @@ const TableCustomModal: React.FC = () => {
     const items = [...newTableNumList];
     const [dragItem] = items.splice(dragIndex, 1);
     items.splice(dropIndex, 0, dragItem);
-
-    const updated = items.map((item, index) => ({
-      ...item,
-      tableNumIndex: index + 1,
-    }));
-    setNewTableNumList(updated);
+  
+    setNewTableNumList(items);
   };
 
   useEffect(() => {
     modalContainerRef.current?.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
-
-  useEffect(() => {
-    const updated = newTableNumList.map((table, index) => ({
-      ...table,
-      tableNumIndex: index + 1,
-    }));
-    setNewTableNumList(updated);
-  }, [newTableNumList.length]);
 
   return (
     <div className="min-w-[580px] w-[660px] h-[700px] flex flex-col justify-start items-center bg-white rounded-2xl overflow-y-auto px-[52px] py-11 gap-[24px]">

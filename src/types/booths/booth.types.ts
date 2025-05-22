@@ -106,7 +106,7 @@ export interface BoothDetailState {
 }
 
 export interface TableItem {
-  tableNumIndex: number;
+  tableNumIndex: number | null;
   customTableNum: string;
   orderUrl?: string;
 }
