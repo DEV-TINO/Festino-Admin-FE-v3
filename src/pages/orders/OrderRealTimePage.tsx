@@ -1,39 +1,34 @@
-import { useEffect, useRef, useState } from 'react';
-import { useCookingOrder } from '@/stores/orders/cookingOrder';
-import { useDepositOrder } from '@/stores/orders/depositOrder';
-import { useFinishOrder } from '@/stores/orders/finishOrder';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTableStatusOrder } from '@/stores/orders/tableStatusOrder';
 import { useDate } from '@/stores/commons/date';
 import IconNotFound from '@/components/icons/IconNotFound';
 import { cloneDeep, isEqual } from 'lodash';
 import OrderCard from '@/components/orders/OrderCard';
+import { useNowOrderStore } from '@/stores/orders/nowOrder';
 import { WaitDepositOrder } from '@/types/orders/order.types';
 
 const OrderRealTimePage: React.FC = () => {
   const { boothId } = useTableStatusOrder();
   const { nowDate } = useDate();
 
-  const { cookingList, getCookingOrderList } = useCookingOrder();
-  const { waitDepositList, getWaitDepositOrderList } = useDepositOrder();
-  const { finishList, getFinishOrderList } = useFinishOrder();
-
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [prevWaitDepositList, setPrevWaitDepositList] = useState<WaitDepositOrder[]>([]);
   const [isNewWaitDepositExist, setIsNewWaitDepositExist] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
+  const {
+    waitDepositList,
+    cookingList,
+    finishList,
+    getNowOrderList
+  } = useNowOrderStore();
+  
   const getAllOrderList = async () => {
-    await Promise.allSettled([
-      getCookingOrderList({ boothId, date: nowDate }),
-      getWaitDepositOrderList({ boothId, date: nowDate }),
-      getFinishOrderList({ boothId, date: nowDate })
-    ]);
-  };
-
-  useEffect(() => {
-    if (!boothId || !nowDate) return;
-    getAllOrderList();
-  }, [boothId, nowDate]);
+    setIsLoading(true);
+    await getNowOrderList({ boothId, date: nowDate });
+    setIsLoading(false);
+  };  
   
   useEffect(() => {
     if (!boothId) return;
@@ -50,17 +45,20 @@ const OrderRealTimePage: React.FC = () => {
     }
   }, [waitDepositList, boothId]);
   
-  useEffect(() => {
-    if (!boothId || !nowDate) return;
-  
-    intervalRef.current = setInterval(() => {
+  useLayoutEffect(() => {
+    if (boothId && nowDate) {
       getAllOrderList();
-    }, 3000);
-  
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
+    }
   }, [boothId, nowDate]);
+  
+  useEffect(() => {
+    if (!isFirstLoad && !isLoading) {
+      intervalRef.current = setInterval(() => {
+        getAllOrderList();
+      }, 3000);
+    }
+    return () => clearInterval(intervalRef.current!);
+  }, [boothId, nowDate, isLoading]);
 
   const renderCardSection = (type: string, data: any[]) => {
     const bgMap: Record<string, string> = {
