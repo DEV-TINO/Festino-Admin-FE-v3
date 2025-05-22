@@ -125,31 +125,34 @@ const ServiceOrderModal: React.FC = () => {
   
     selectedTables.forEach((table) => {
       const tableIndex = table.tableNumIndex;
-      const currentOrders = newOrderList[tableIndex] ? [...newOrderList[tableIndex]] : [];
-  
-      selectedMenus.forEach((menu) => {
-        const price = isService ? 0 : menu.menuPrice;
-  
-        const existingOrder = currentOrders.find(
-          (order) => order.menuId === menu.menuId && order.menuPrice === price
-        );
-  
-        if (existingOrder) {
-          existingOrder.menuCount += 1;
-        } else {
-          currentOrders.push({
-            menuId: menu.menuId,
-            menuName: menu.menuName,
-            menuCount: 1,
-            menuPrice: price,
-            isService,
-          });
-        }
-  
-        newTotal += price;
-      });
-  
-      newOrderList[tableIndex] = currentOrders;
+      if (tableIndex) {
+        const currentOrders = newOrderList[tableIndex] ? [...newOrderList[tableIndex]] : [];
+        
+        
+        selectedMenus.forEach((menu) => {
+          const price = isService ? 0 : menu.menuPrice;
+          
+          const existingOrder = currentOrders.find(
+            (order) => order.menuId === menu.menuId && order.menuPrice === price
+          );
+          
+          if (existingOrder) {
+            existingOrder.menuCount += 1;
+          } else {
+            currentOrders.push({
+              menuId: menu.menuId,
+              menuName: menu.menuName,
+              menuCount: 1,
+              menuPrice: price,
+              isService,
+            });
+          }
+          
+          newTotal += price;
+        });
+        
+        newOrderList[tableIndex] = currentOrders;
+      }
     });
   
     setOrderList(newOrderList);
@@ -335,13 +338,17 @@ const ServiceOrderModal: React.FC = () => {
                 {filteredTableList.map((table) => (
                   <li
                     key={table.tableNumIndex}
-                    onClick={() => selectTable(table.tableNumIndex, table.customTableNum)}
+                    onClick={() => {
+                      if (table.tableNumIndex) {
+                        selectTable(table.tableNumIndex, table.customTableNum)
+                      }
+                    }}
                     className="flex items-center ps-2 rounded hover:bg-gray-100 cursor-pointer"
                   >
                     <div className="flex items-center ps-2 rounded hover:bg-gray-100">
                       <input
                         type="checkbox"
-                        value={table.tableNumIndex}
+                        value={table.tableNumIndex ?? ''}
                         checked={!!selectedTables.find((selectedTable) => selectedTable.tableNumIndex === table.tableNumIndex)}
                         readOnly
                         className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
@@ -371,7 +378,11 @@ const ServiceOrderModal: React.FC = () => {
                   >
                     {table.customTableNum}
                     <IconDelete
-                      onClick={() => selectTable(table.tableNumIndex, table.customTableNum)}
+                      onClick={() => {
+                        if (table.tableNumIndex) {
+                          selectTable(table.tableNumIndex, table.customTableNum)
+                        }
+                      }}
                       className="cursor-pointer"
                     />
                   </div>
