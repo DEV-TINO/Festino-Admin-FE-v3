@@ -46,6 +46,7 @@ const MenuModal: React.FC = () => {
     setMenuInfo({
       ...menuInfo,
       menuType,
+      isSoldOut: false
     });
     submitModal();
     setIsSubmit(false);

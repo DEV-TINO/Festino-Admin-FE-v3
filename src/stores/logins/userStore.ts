@@ -69,7 +69,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
     try {
       const res = await api.get('/admin/user/booth')
       const data = res.data
-      console.log(data)
         if (data.success) {
           const ownedId = res.data.data
           set({ userOwnBoothId: ownedId })

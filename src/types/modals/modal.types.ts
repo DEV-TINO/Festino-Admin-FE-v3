@@ -101,6 +101,7 @@ export interface TableVisualizationStore {
   selectedTableNumIndex: number | null;
   getAllTableVisualization: (params: { boothId: string, date: number }) => Promise<void>;
   getAllOrderByTableNum: (params: { boothId: string, tableNum: number }) => Promise<void>;
+  updateTablePriority: (boothId: string, tableNumPriorityList: { tableNumIndex: number, tablePriority: number }[]) => Promise<boolean>;
   openTableVisualDetail: (params: { tableNumIndex: number }) => void;
   closeTableVisualDetail: () => void;
   initSelectedTableNum: () => void;

@@ -31,7 +31,9 @@ const TableCustomModal: React.FC = () => {
       tableNumIndex: null,
     }));
   
-    setNewTableNumList(prev => [...prev, ...newItems]);
+    if (newItems) {
+      setNewTableNumList(prev => [...prev, ...newItems]);
+    }
   
     await new Promise(resolve => setTimeout(resolve));
     const lastIndex = newTableNumList.length + newItems.length - 1;

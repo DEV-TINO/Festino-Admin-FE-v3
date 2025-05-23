@@ -11,7 +11,6 @@ const OrderCookingPage: React.FC = () => {
   const {
     cookingList,
     getCookingOrderList,
-    initCookingOrderList,
   } = useCookingOrder();
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -19,7 +18,6 @@ const OrderCookingPage: React.FC = () => {
   useEffect(() => {
     if (!boothId) return;
 
-    initCookingOrderList();
     getCookingOrderList({ boothId, date: nowDate });
 
     intervalRef.current = setInterval(() => {
@@ -31,7 +29,7 @@ const OrderCookingPage: React.FC = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [boothId, nowDate]);
+  }, []);
 
   return (
     <>

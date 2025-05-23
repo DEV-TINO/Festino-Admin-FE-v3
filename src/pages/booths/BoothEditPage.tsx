@@ -276,6 +276,7 @@ const BoothEditPage: React.FC = () => {
       isTossPay: updatedBoothInfo.isTossPay,
       isKakaoPay: updatedBoothInfo.isKakaoPay,
       isCall: isCall,
+      isSoldOut: false
     };
   
     let newBoothId = '';
@@ -349,8 +350,14 @@ const BoothEditPage: React.FC = () => {
     await Promise.allSettled([
       ...deleteMenuList.map((menuId) => deleteMenu(menuId)),
       ...patchMenuList.map((menu) => patchMenu(menu)),
-      ...createMenuList.map((menu) => createMenu(menu)),
+      ...createMenuList.map((menu) =>
+        createMenu({
+          ...menu,
+          isSoldOut: false,
+        })
+      ),
     ]);
+
     if (ADMIN_CATEGORY[boothInfo.adminCategory] === 'night') {
       const tableDetailResult = await submitTableDetail(boothInfo.boothId);
       if (!tableDetailResult) return;

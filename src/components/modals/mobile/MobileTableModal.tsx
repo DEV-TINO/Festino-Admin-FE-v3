@@ -4,11 +4,6 @@ import { useTableDetail } from '@/stores/booths/tableDetail';
 import IconNotFound from '@/components/icons/IconNotFound';
 import { useBaseModal } from '@/stores/commons/baseModal';
 
-interface TableItem {
-  customTableNum: string;
-  tableNumIndex: number;
-}
-
 const MobileTableCustomModal: React.FC = () => {
   const modalContainerRef = useRef<HTMLDivElement>(null);
   const { closeMobileModal } = useBaseModal();
@@ -18,7 +13,7 @@ const MobileTableCustomModal: React.FC = () => {
     setTableNum,
   } = useTableDetail();
 
-  const [newTableNumList, setNewTableNumList] = useState<TableItem[]>(
+  const [newTableNumList, setNewTableNumList] = useState(
     _.cloneDeep(tableNumList)
   );
 
