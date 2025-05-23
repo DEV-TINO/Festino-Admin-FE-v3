@@ -38,7 +38,11 @@ const MenuModal: React.FC = () => {
   const handleSubmit = () => {
     setIsSubmit(true);
     const { menuName, menuPrice, menuDescription } = menuInfo;
-    if (!menuName || !menuPrice || !menuDescription) return;
+    if (!isNightCategory) setMenuType('MAIN');
+    if (!menuName || !menuPrice || !menuDescription || !menuType) {
+      alert("모든 데이터를 입력해주세요.");
+      return;
+    }
     setMenuInfo({
       ...menuInfo,
       menuType,

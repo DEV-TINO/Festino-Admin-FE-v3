@@ -218,19 +218,29 @@ const BoothEditPage: React.FC = () => {
   const handleClickSubmit = async () => {
     if (isSubmit) return;
     setIsSubmit(true);
-
-    if (
-      !boothInfo.adminName.length ||
-      !boothInfo.boothName.length ||
-      !serviceHours.length ||
-      !boothInfo.boothIntro.length ||
-      (isTossPay && !boothInfo.tossPay?.length) ||
-      (isKakaoPay && !boothInfo.kakaoPay?.length)
-    ) {
-      setIsSubmit(false);
-      return;
+    if (ADMIN_CATEGORY[boothInfo.adminCategory] === 'night') {
+      if (
+        !boothInfo.adminName.length ||
+        !boothInfo.boothName.length ||
+        !serviceHours.length ||
+        !boothInfo.boothIntro.length ||
+        (isTossPay && !boothInfo.tossPay?.length) ||
+        (isKakaoPay && !boothInfo.kakaoPay?.length)
+      ) {
+        setIsSubmit(false);
+        return;
+      }
+    } else {
+      if (
+        !boothInfo.adminName.length ||
+        !boothInfo.boothName.length ||
+        !serviceHours.length ||
+        !boothInfo.boothIntro.length
+      ) {
+        setIsSubmit(false);
+        return;
+      }
     }
-  
     const pattern = /^([01]?[0-9]|2[0-3]):[0-5][0-9]\s*~\s*([01]?[0-9]|2[0-4]):([0-5][0-9]|60)$/;
   
     if (!pattern.test(serviceHours.trim())) {
@@ -250,7 +260,6 @@ const BoothEditPage: React.FC = () => {
       isKakaoPay: isKakaoPay,
       isCall: isCall,
     };
-  
     const saveBoothUrl = `/admin/booth/${ADMIN_CATEGORY[boothInfo.adminCategory]}`;
     const baseBoothInfo = {
       boothName: updatedBoothInfo.boothName,
@@ -327,7 +336,6 @@ const BoothEditPage: React.FC = () => {
         return false;
       }
     };
-  
     if (!boothCategory) {
       alert('부스 카테고리를 선택해주세요.');
       return;
@@ -350,12 +358,10 @@ const BoothEditPage: React.FC = () => {
       ),
     ]);
 
-  
     if (ADMIN_CATEGORY[boothInfo.adminCategory] === 'night') {
       const tableDetailResult = await submitTableDetail(boothInfo.boothId);
       if (!tableDetailResult) return;
     }
-  
     setIsSubmit(false);
     navigate(`/booth/${newBoothId}`);
   };
