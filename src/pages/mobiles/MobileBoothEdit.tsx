@@ -10,6 +10,8 @@ import { useBoothDetail } from '@/stores/booths/boothDetail';
 import { useTableDetail } from '@/stores/booths/tableDetail';
 import { useMenuModal } from '@/stores/booths/menuModal';
 import IconDelete from '@/components/icons/IconDelete';
+import { useUserStore } from '@/stores/logins/userStore';
+import { useBoothList } from '@/stores/booths/boothList';
 
 const BoothEditPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,17 +20,20 @@ const BoothEditPage: React.FC = () => {
   const { tableNum, tableNumList, openMobileTableDetailModal, submitTableDetail } = useTableDetail();
   const { setBoothInfo, boothInfo, menuList, createMenuList, deleteMenuList, patchMenuList, originalMenuList, addDeleteMenu, addPatchMenu, updateMenuList, init, deleteMenu, createMenu, patchMenu  } = useBoothDetail();
   const { openMobileModal } = useMenuModal();
+  const { getAllBoothList, boothList } = useBoothList();
+  const { isAdmin } = useUserStore();
   const [selectedMenuIndex, setSelectedMenuIndex] = useState<number>(-1);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(-1);
   const [serviceHours, setServiceHours] = useState('');
   const [fileUrls, setFileUrls] = useState<string[]>([]);
-  const [isSubmit, setIsSubmit] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isKakaoPay, setIsKakaoPay] = useState(false);
-  const [isTossPay, setIsTossPay] = useState(false);
-  const [useReservation, setUseReservation] = useState(false);
-  const [useOrder, setUseOrder] = useState(false);
-  const [isCall, setIsCall] = useState(false);
+  const [isSubmit, setIsSubmit] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isKakaoPay, setIsKakaoPay] = useState<boolean>(false);
+  const [isTossPay, setIsTossPay] = useState<boolean>(false);
+  const [useReservation, setUseReservation] = useState<boolean>(false);
+  const [useOrder, setUseOrder] = useState<boolean>(false);
+  const [isCall, setIsCall] = useState<boolean>(false);
+  const [selectedBoothId, setSelectedBoothId] = useState<string>('');
 
   const isSelectedImage = (index: number) => {
     if (selectedImageIndex !== -1) {
@@ -220,7 +225,7 @@ const BoothEditPage: React.FC = () => {
           boothCategory === 'night'
             ? {
                 ...baseBoothInfo,
-                boothId: boothId,
+                boothId: selectedBoothId,
                 isOrder: useOrder,
                 isReservation: useReservation,
                 isCall: isCall,
@@ -230,10 +235,10 @@ const BoothEditPage: React.FC = () => {
               }
             : {
                 ...baseBoothInfo,
-                boothId: boothId,
+                boothId: selectedBoothId,
               };
   
-        if (boothId) {
+        if (selectedBoothId) {
           response = await api.put(saveBoothUrl, payload);
         } else {
           if (boothCategory === 'night') {
@@ -361,12 +366,25 @@ const BoothEditPage: React.FC = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const condition = await init(boothId!);
-      if (!condition) {
-        alert('부스 정보를 불러오는데 실패했습니다.');
-        navigate('/mobile');
-        return;
+      if (isAdmin) {
+        await getAllBoothList();
+        if (boothList.length > 0) {
+          setSelectedBoothId(boothList[0].boothId);
+          return;
+        }
+      } else {
+        setSelectedBoothId(boothId ?? '');
       }
+    };
+  
+    fetch();
+  }, []);
+  
+  useEffect(() => {
+    if (!selectedBoothId) return;
+  
+    const fetch = async () => {
+      await init(selectedBoothId);
   
       const info = useBoothDetail.getState().boothInfo;
       setServiceHours(`${info.openTime} ~ ${info.closeTime}`);
@@ -378,8 +396,9 @@ const BoothEditPage: React.FC = () => {
       setIsKakaoPay(info.isKakaoPay);
       setFileUrls(info.boothImage ?? []);
     };
+  
     fetch();
-  }, [boothId]);  
+  }, [selectedBoothId]);
 
   return (
       <form className="w-full h-full mt-7"
@@ -389,12 +408,29 @@ const BoothEditPage: React.FC = () => {
         }}
       >
           <div className="px-mobile flex flex-col gap-[20px] text-secondary-700">
+            {!isAdmin ? (
             <div className="flex gap-[10px] items-center">
               <div className="w-[90px] font-bold text-base shrink-0">학과</div>
               <div className="w-full h-11 px-5 py-3 bg-secondary-900-light-3 rounded-2lg text-sm text-secondary-500-light-70">
               {boothInfo?.adminName}
               </div>
             </div>
+            ) : (
+              <div className="flex gap-[10px] items-center">
+                <div className="w-[90px] font-bold text-base shrink-0">학과</div>
+                <select
+                  className="w-full h-11 px-5 py-3 bg-secondary-900-light-3 rounded-2lg text-sm border-none"
+                  value={selectedBoothId}
+                  onChange={(e) => setSelectedBoothId(e.target.value)}
+                >
+                  {boothList.map((booth, index) => (
+                    <option key={index} value={booth.boothId}>
+                      {booth.adminName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div className="flex gap-[10px] items-center">
               <div className="w-[90px] font-bold text-base shrink-0">부스이름</div>
               <input
@@ -464,25 +500,27 @@ const BoothEditPage: React.FC = () => {
                   </label>
                 )}
 
-                {fileUrls.map((url, index) => (
-                  <div
-                    key={index}
-                    className={`relative w-[120px] h-[120px] flex-shrink-0 mr-2 rounded-3xl border ${isSelectedImage(index)}`}
-                    onClick={() => handleSelectImage(index)}
-                  >
+                {fileUrls.map((url, index) =>
+                  url.length === 0 ? null : (
                     <div
-                      style={setBackgroundImage(url)}
-                      className="w-full h-full object-cover rounded-3xl border bg-cover"
-                    />
-                    <IconDelete
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteImage(index);
-                      }}
-                      className="absolute top-2 right-2"
-                    />
-                  </div>
-                ))}
+                      key={index}
+                      className={`relative w-[120px] h-[120px] flex-shrink-0 mr-2 rounded-3xl border ${isSelectedImage(index)}`}
+                      onClick={() => handleSelectImage(index)}
+                    >
+                      <div
+                        style={setBackgroundImage(url)}
+                        className="w-full h-full object-cover rounded-3xl border bg-cover"
+                      />
+                      <IconDelete
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteImage(index);
+                        }}
+                        className="absolute top-2 right-2"
+                      />
+                    </div>
+                  )
+                )}
 
                 {fileUrls.length > 0 && fileUrls.length < 10 && (
                   <label
