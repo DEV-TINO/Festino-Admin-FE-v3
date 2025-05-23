@@ -4,7 +4,6 @@ import { isUUID } from "@/utils/utils"
 import { create } from "zustand"
 import { UserStore } from "@/types/logins/user.types"
 import { Cookies } from "react-cookie";
-
 const cookies = new Cookies();
 
 export const useUserStore = create<UserStore>((set, get) => ({
@@ -105,7 +104,8 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
   // 로그인
   login: async () => {
-    const { userId, password, isUserValid } = get()
+    const { userId, password, isUserValid } = get();
+
     try {
       const res = await api.post('/admin/user/login', {
         adminId: btoa(userId),
