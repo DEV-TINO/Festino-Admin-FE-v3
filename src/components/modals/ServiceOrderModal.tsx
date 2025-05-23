@@ -246,11 +246,11 @@ const ServiceOrderModal: React.FC = () => {
   };
 
   const filteredTableList = useMemo(() => {
-    if(!searchTable) return tableNumList;
-    return tableNumList.filter((table) => {
-      String(table.tableNumIndex).includes(searchTable) || table.customTableNum.includes(searchTable);
-    });
-  }, [tableNumList, searchTable])
+    if (!searchTable) return tableNumList;
+    return tableNumList.filter((table) =>
+      String(table.tableNumIndex).includes(searchTable) || String(table.customTableNum).includes(searchTable)
+    );
+  }, [tableNumList, searchTable]);  
   
   const filteredMenuList = useMemo(() => {
     if (!searchMenu) return menuList;
@@ -353,7 +353,7 @@ const ServiceOrderModal: React.FC = () => {
                         className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                       />
                       <label className="w-full py-2 ms-2 text-xs font-medium text-gray-900 rounded">
-                        {table.tableNumIndex} - {table.customTableNum}번 테이블
+                        {table.customTableNum}번 테이블
                       </label>
                     </div>
                   </li>
