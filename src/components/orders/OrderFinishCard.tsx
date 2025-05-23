@@ -35,7 +35,7 @@ const OrderFinishCard: React.FC<OrderFinishCardProps> = (props) => {
     <>
       {/* 조리완료 페이지 */}
       {pathname.includes('finish') ? (
-        <div className="w-full min-w-[350px] h-[400px] flex flex-col justify-between outline outline-1 outline-success-800-light-70 rounded-3xl max-w-[500px]">
+        <div className="w-full min-w-[350px] h-[400px] flex flex-col justify-between outline outline-1 outline-success-800-light-70 rounded-3xl max-w-[350px]">
           <div className="flex justify-between w-full h-[73px] items-center px-[21px] text-sm font-semibold bg-success-50 flex-wrap gap-x-1 rounded-t-3xl border-b border-secondary-100">
             <div>No.{props.orderNum}</div>
             <div>{getCustomTableNum(props.tableNum)}번</div>

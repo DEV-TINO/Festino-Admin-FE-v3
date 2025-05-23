@@ -94,7 +94,7 @@ const OrderCookingCard: React.FC<CookingMenu> = ({ menuId, menuName, tableCount,
   };
 
   return (
-      <div className='w-full min-w-[350px] h-[400px] rounded-3xl flex flex-col justify-between outline outline-1 outline-primary-800-light-24 max-w-[500px] shrink-0'>
+      <div className='w-full min-w-[350px] h-[400px] rounded-3xl flex flex-col justify-between outline outline-1 outline-primary-800-light-24 max-w-[350px] shrink-0'>
           <div className='flex justify-center w-full h-[65px] items-center rounded-t-3xl px-[28px] text-lg font-semibold bg-primary-800-light-8 border-b border-primary-200'>
               {menuName}
           </div>
