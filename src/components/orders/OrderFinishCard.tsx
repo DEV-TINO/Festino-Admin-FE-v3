@@ -33,6 +33,7 @@ const OrderFinishCard: React.FC<OrderFinishCardProps> = (props) => {
 
   return (
     <>
+      {/* 조리완료 페이지 */}
       {pathname.includes('finish') ? (
         <div className="w-full min-w-[350px] h-[400px] flex flex-col justify-between outline outline-1 outline-success-800-light-70 rounded-3xl max-w-[500px]">
           <div className="flex justify-between w-full h-[73px] items-center px-[21px] text-sm font-semibold bg-success-50 flex-wrap gap-x-1 rounded-t-3xl border-b border-secondary-100">
@@ -82,6 +83,7 @@ const OrderFinishCard: React.FC<OrderFinishCardProps> = (props) => {
           </div>
         </div>
       ) : (
+        // 실시간 페이지
         <div className="w-[350px] min-w-[350px] h-[92px] rounded-3xl flex justify-between items-center outline outline-1 outline-success-800-light-70 bg-success-50 px-6">
           <div className="w-full flex flex-col justify-center text-secondary-700 font-medium gap-[11px]">
             <div className="flex gap-[11px] items-center">
@@ -95,7 +97,7 @@ const OrderFinishCard: React.FC<OrderFinishCardProps> = (props) => {
               </div>
             </div>
             <div className="flex text-sm items-center gap-[10px]">
-              <div className="pl-[5px]">{props.tableNum}번 테이블</div>
+              <div className="pl-[5px]">{getCustomTableNum(props.tableNum)}번 테이블</div>
               <div>{props.userName}</div>
               <div>{prettyPrice(props.totalPrice)}</div>
             </div>
