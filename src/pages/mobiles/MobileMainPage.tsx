@@ -53,7 +53,7 @@ const MobileMain: React.FC = () => {
         </div>
       )}
 
-      {(boothInfo.adminName || boothType === 'night' || isAdmin) && (
+      {isAdmin && (
         <div className="flex flex-col gap-[30px] text-secondary-800 w-full">
           <p className="font-semibold text-xl">예약관리</p>
           <div
@@ -64,9 +64,29 @@ const MobileMain: React.FC = () => {
             <div className="bg-white flex rounded-[20px] justify-between w-full h-[88px] p-5 items-center border-[0.5px] border-primary-800-light-16 shrink-0">
               <div className="flex flex-col gap-[6px]">
                 <p className="font-semibold">
-                  {isAdmin ? '예약 서비스' : `${boothInfo.totalReservationNum}팀 대기 중`}
+                  '예약 서비스'
                 </p>
-                {!isAdmin && <p className="text-xs">예약 서비스 운영 시간 10:00 ~ 22:00</p>}
+              </div>
+              <IconBannerArrow />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {(boothInfo.adminName && boothType === 'night' && boothInfo.isReservation ) && (
+        <div className="flex flex-col gap-[30px] text-secondary-800 w-full">
+          <p className="font-semibold text-xl">예약관리</p>
+          <div
+            className="bg-primary-800 rounded-[20px] flex flex-col items-center w-full relative h-[190px] justify-end p-5 cursor-pointer"
+            onClick={() => handleClickAdminMenu('reserve')}
+          >
+            <IconReserveTino />
+            <div className="bg-white flex rounded-[20px] justify-between w-full h-[88px] p-5 items-center border-[0.5px] border-primary-800-light-16 shrink-0">
+              <div className="flex flex-col gap-[6px]">
+                <p className="font-semibold">
+                  {`${boothInfo.totalReservationNum}팀 대기 중`}
+                </p>
+                <p className="text-xs">예약 서비스 운영 시간 10:00 ~ 22:00</p>
               </div>
               <IconBannerArrow />
             </div>
