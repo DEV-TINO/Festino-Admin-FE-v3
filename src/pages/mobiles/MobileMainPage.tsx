@@ -73,7 +73,7 @@ const MobileMain: React.FC = () => {
         </div>
       )}
 
-      {(boothInfo.adminName && boothType === 'night' && boothInfo.isReservation ) && (
+      {(!isAdmin && boothInfo.adminName && boothType === 'night' && boothInfo.isReservation ) && (
         <div className="flex flex-col gap-[30px] text-secondary-800 w-full">
           <p className="font-semibold text-xl">예약관리</p>
           <div
