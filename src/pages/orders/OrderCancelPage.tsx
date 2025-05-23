@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useCancelOrder } from '@/stores/orders/cancelOrder';
 import { useTableStatusOrder } from '@/stores/orders/tableStatusOrder';
 import { useDate } from '@/stores/commons/date';
@@ -17,6 +17,8 @@ const CancelOrderPage: React.FC = () => {
   const [searchMenu, setSearchMenu] = useState('');
   const [isFocus, setIsFocus] = useState(false);
   const [filteredMenuList, setFilteredMenuList] = useState<typeof cancelList>([]);
+
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const updateFilteredMenuList = () => {
     let filtered = [...cancelList];
@@ -48,14 +50,25 @@ const CancelOrderPage: React.FC = () => {
     await getCancelOrderList({ boothId, date: nowDate });
   };
 
+  // 3초마다 갱신
+  useEffect(() => {
+    if (!boothId) return;
+
+    initCancelOrderList();
+    getCancelOrderList({ boothId, date: nowDate });
+
+    intervalRef.current = setInterval(() => {
+      getCancelOrderList({ boothId, date: nowDate });
+    }, 3000);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [boothId, nowDate]);
+
   useEffect(() => {
     updateFilteredMenuList();
   }, [cancelList, selectedFilterMenu, searchMenu]);
-
-  useEffect(() => {
-    initCancelOrderList();
-    getCancelOrderList({ boothId, date: nowDate });
-  }, [boothId, nowDate]);
 
   return (
     <div className="w-full flex flex-col gap-6">

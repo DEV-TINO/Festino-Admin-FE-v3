@@ -23,8 +23,17 @@ import MobileMain from './pages/mobiles/MobileMainPage';
 import MobileBoothEdit from './pages/mobiles/MobileBoothEdit';
 import MobileModalPage from './pages/modals/mobile/MobileModalPage';
 import MobileReservePage from './pages/mobiles/MobileRservePage';
+import { useNowOrderStore } from './stores/orders/nowOrder';
+import { useEffect } from 'react';
 
 const App: React.FC = () => {
+  const { getNowOrderList } = useNowOrderStore();
+
+  useEffect(() => {
+    async () => {
+      await getNowOrderList;
+    }
+  })
   return (
     <BrowserRouter>
       <AppInitializer />

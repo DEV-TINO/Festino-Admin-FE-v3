@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFinishOrder } from '@/stores/orders/finishOrder';
 import { useDate } from '@/stores/commons/date';
 import { ORDER_FILTER } from '@/constants/constant';
@@ -22,6 +22,8 @@ const OrderFinishPage: React.FC = () => {
   const [searchMenu, setSearchMenu] = useState('');
   const [isFocus, setIsFocus] = useState(false);
   const [filteredMenuList, setFilteredMenuList] = useState<FinishOrder[]>([]);
+
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const updateFilteredMenuList = () => {
     let filtered = [...finishList];
@@ -49,18 +51,25 @@ const OrderFinishPage: React.FC = () => {
     await getFinishOrderList({ boothId, date: nowDate });
   };
 
+  // 3초마다 갱신
+  useEffect(() => {
+    if (!boothId) return;
+
+    initFinishOrderList();
+    getFinishOrderList({ boothId, date: nowDate });
+
+    intervalRef.current = setInterval(() => {
+      getFinishOrderList({ boothId, date: nowDate });
+    }, 3000);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [boothId, nowDate]);
+
   useEffect(() => {
     updateFilteredMenuList();
   }, [finishList, selectedFilterMenu, searchMenu]);
-
-  useEffect(() => {
-    if (boothId) getFinishOrderList({ boothId, date: nowDate });
-  }, [boothId]);
-
-  useEffect(() => {
-    initFinishOrderList();
-    getFinishOrderList({ boothId, date: nowDate });
-  }, []);
 
   return (
     <div className="w-full">

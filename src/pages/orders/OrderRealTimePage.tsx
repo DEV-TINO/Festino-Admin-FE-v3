@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTableStatusOrder } from '@/stores/orders/tableStatusOrder';
 import { useDate } from '@/stores/commons/date';
 import IconNotFound from '@/components/icons/IconNotFound';
@@ -11,11 +11,9 @@ const OrderRealTimePage: React.FC = () => {
   const { boothId } = useTableStatusOrder();
   const { nowDate } = useDate();
 
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [prevWaitDepositList, setPrevWaitDepositList] = useState<WaitDepositOrder[]>([]);
   const [isNewWaitDepositExist, setIsNewWaitDepositExist] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   const {
     waitDepositList,
@@ -25,9 +23,7 @@ const OrderRealTimePage: React.FC = () => {
   } = useNowOrderStore();
   
   const getAllOrderList = async () => {
-    setIsLoading(true);
     await getNowOrderList({ boothId, date: nowDate });
-    setIsLoading(false);
   };  
   
   useEffect(() => {
@@ -46,13 +42,10 @@ const OrderRealTimePage: React.FC = () => {
   }, [waitDepositList, boothId]);
   
   useEffect(() => {
-    if (!isFirstLoad && !isLoading) {
-      intervalRef.current = setInterval(() => {
-        getAllOrderList();
-      }, 1000);
+    if (boothId) {
+      getAllOrderList();
     }
-    return () => clearInterval(intervalRef.current!);
-  }, [boothId, nowDate, isLoading]);
+  }, [boothId, nowDate]);
 
   useEffect(() => {
     const handleFocus = () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDepositOrder } from '@/stores/orders/depositOrder';
 import IconNotFound from '@/components/icons/IconNotFound';
 import OrderReadyCard from '@/components/orders/OrderReadyCard';
@@ -21,6 +21,8 @@ const OrderReadyPage: React.FC = () => {
   const [selectedFilterMenu, setSelectedFilterMenu] = useState(ORDER_FILTER['all']);
   const [isFocus, setIsFocus] = useState(false);
   const [filteredMenuList, setFilteredMenuList] = useState<WaitDepositOrder[]>([]);
+
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const updateFilteredMenuList = () => {
     let filtered = [...waitDepositList];
@@ -48,17 +50,27 @@ const OrderReadyPage: React.FC = () => {
     await getWaitDepositOrderList({ boothId, date: nowDate });
   };
 
+  // 3초마다 자동 새로고침
+  useEffect(() => {
+    if (!boothId) return;
+
+    // 최초 1회 실행
+    getWaitDepositOrderList({ boothId, date: nowDate });
+
+    // 3초 간격 polling
+    intervalRef.current = setInterval(() => {
+      getWaitDepositOrderList({ boothId, date: nowDate });
+    }, 3000);
+
+    // 정리
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [boothId, nowDate]);
+
   useEffect(() => {
     updateFilteredMenuList();
   }, [waitDepositList, selectedFilterMenu, searchMenu]);
-
-  useEffect(() => {
-    if (boothId) getWaitDepositOrderList({ boothId, date: nowDate });
-  }, [boothId]);
-
-  useEffect(() => {
-    getWaitDepositOrderList({ boothId, date: nowDate });
-  }, []);
 
   return (
     <div className='w-full'>
@@ -69,9 +81,7 @@ const OrderReadyPage: React.FC = () => {
               <div
                 key={idx}
                 className={`cursor-pointer text-sm ${
-                  selectedFilterMenu === orderMenu
-                    ? 'font-bold'
-                    : ''
+                  selectedFilterMenu === orderMenu ? 'font-bold' : ''
                 }`}
                 onClick={() => setSelectedFilterMenu(orderMenu)}>
                 {orderMenu}
@@ -80,29 +90,27 @@ const OrderReadyPage: React.FC = () => {
           </div>
           <button
             className='is-button w-[85px] h-[30px] gap-1 text-xs flex justify-center items-center'
-            onClick={() => handleClickRefreshButton()}>
+            onClick={handleClickRefreshButton}>
             <IconRefreshVector />
             새로고침
           </button>
         </div>
         <div
-            className={`w-[350px] h-[40px] rounded-xl flex items-center px-[11px] bg-white gap-1 outline ${
-              isFocus
-                ? 'outline-primary-800-light-70 outline-2'
-                : 'outline-gray-300 outline-1'
-            }`}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}>
-            <IconSearch fillColor='#97C9FF' />
-            <input
-              value={searchMenu}
-              onChange={(e) => setSearchMenu(e.target.value)}
-              placeholder='주문 검색'
-              className='grow focus:outline-none text-sm'
-            />
-            <button className='w-[75px] h-[30px] rounded-xl text-sm bg-primary-800 text-white'>
-              Search
-            </button>
+          className={`w-[350px] h-[40px] rounded-xl flex items-center px-[11px] bg-white gap-1 outline ${
+            isFocus ? 'outline-primary-800-light-70 outline-2' : 'outline-gray-300 outline-1'
+          }`}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}>
+          <IconSearch fillColor='#97C9FF' />
+          <input
+            value={searchMenu}
+            onChange={(e) => setSearchMenu(e.target.value)}
+            placeholder='주문 검색'
+            className='grow focus:outline-none text-sm'
+          />
+          <button className='w-[75px] h-[30px] rounded-xl text-sm bg-primary-800 text-white'>
+            Search
+          </button>
         </div>
       </div>
       <div className='grid 2xl:grid-cols-3 lg:grid-cols-2 place-items-center gap-10'>
@@ -120,7 +128,7 @@ const OrderReadyPage: React.FC = () => {
         )}
       </div>
     </div>
-  )
+  );
 };
 
 export default OrderReadyPage;

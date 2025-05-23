@@ -13,7 +13,7 @@ import { formatMonth, prettyPrice } from '@/utils/utils';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 const OrderStatisticsPage: React.FC = () => {
-  const [month] = useState<number>(9);
+  const [month] = useState<number>(5);
   const [day, setDay] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [activeDate, setActiveDate] = useState<number>(1);
@@ -109,21 +109,33 @@ const OrderStatisticsPage: React.FC = () => {
   }, [boothList, userOwnBoothId]);  
 
   // 통계 API로 갱신되면 정렬 데이터도 초기화
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
-    const fetchData = async () => {
-      if (!boothId || !nowDate) return;
-  
+    if (!boothId || !nowDate) return;
+
+    const poll = async () => {
       await getStatistics({ boothId, date: day, type });
-  
       const { allOrderStatistics } = useOrderStatistics.getState();
       setSortedMenu({
         ...allOrderStatistics,
         menuSaleList: [...allOrderStatistics.menuSaleList],
       });
     };
-  
-    fetchData();
-  }, [boothId, nowDate, type, day]);  
+
+    // 최초 1회 실행
+    poll();
+
+    // 3초마다 실행
+    intervalRef.current = setInterval(() => {
+      poll();
+    }, 3000);
+
+    // 컴포넌트 언마운트 시 clear
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [boothId, nowDate, type, day]);
 
   return (
     <div className="flex flex-col">

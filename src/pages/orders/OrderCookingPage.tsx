@@ -29,7 +29,7 @@ const OrderCookingPage: React.FC = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, []);
+  }, [boothId, nowDate]);
 
   return (
     <>

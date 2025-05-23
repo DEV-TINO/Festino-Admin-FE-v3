@@ -143,10 +143,10 @@ export const ORDER_URL = {
   statistics: 'statistics',
 };
 
-export const DATES: Record<'26' | '27' | '28', string> = {
-  '26': '금',
-  '27': '토',
-  '28': '일',
+export const DATES: Record<'25' | '26' | '27', string> = {
+  '25': '월',
+  '26': '화',
+  '27': '수',
 };
 
 export const STATISTICS_TYPE: Record<number, StatisticsTypeValue> = {
@@ -156,9 +156,9 @@ export const STATISTICS_TYPE: Record<number, StatisticsTypeValue> = {
 };
 
 export const ACTIVE_DATE_MAP: Record<number, number> = {
-  26: 1,
-  27: 2,
-  28: 3,
+  25: 1,
+  26: 2,
+  27: 3,
 };
 
 export const ORDER_FILTER = {
