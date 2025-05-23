@@ -7,8 +7,10 @@ import { useUserStore } from '@/stores/logins/userStore';
 import { useBoothDetail } from '@/stores/booths/boothDetail';
 import { useMessageStore } from '@/stores/reserve/message';
 import { Booth } from '@/types/booths/booth.types';
+import { useNavigate } from 'react-router-dom';
 
 const MobileReservePage: React.FC = () => {
+  const navigate = useNavigate();
   const [reserveBoothList, setReserveBoothList] = useState<Booth[]>([]);
   const [listType, setListType] = useState<'reserve' | 'cancel' | 'complete'>('reserve');
   const [isActive, setIsActive] = useState({ reserveList: true, deleteList: false, completeList: false });
@@ -45,6 +47,10 @@ const MobileReservePage: React.FC = () => {
       setReserveBoothList(filtered);
 
       if (isAdmin) {
+        if (!filtered[0]) {
+          alert("예약을 사용하는 부스가 없습니다.")
+          navigate("/mobile");
+        }
         setSelectedBooth(filtered[0]);
       } else {
         if (userOwnBoothId) {
@@ -75,7 +81,7 @@ const MobileReservePage: React.FC = () => {
       <div className="flex justify-end w-full px-4 items-center gap-4">
         {isAdmin && (
           <select
-            className="max-w-[160px] rounded-lg border-gray-400 text-secondary-900 text-sm focus:text-black focus:ring-white focus:border-primary-800 block w-full px-4"
+            className="border-2 max-w-[140px] rounded-lg text-secondary-900 text-sm focus:text-black focus:ring-white focus:border-primary-800 block w-full p-2"
             value={selectedBooth?.boothId}
             onChange={(e) => {
               const booth = reserveBoothList.find((b) => b.boothId === e.target.value);

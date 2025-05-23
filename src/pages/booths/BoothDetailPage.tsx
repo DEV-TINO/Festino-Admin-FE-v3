@@ -100,6 +100,7 @@ const BoothDetailPage: React.FC = () => {
   
 
   const handleClickTableNum = (index: number) => {
+    if(!isBoothOwner) return;
     if(tableNumList[index].orderUrl) {
       navigator.clipboard.writeText(tableNumList[index].orderUrl!);
       alert('QR 코드 주소가 복사되었습니다.');
@@ -203,53 +204,57 @@ const BoothDetailPage: React.FC = () => {
                                   <div
                                       className='grow flex gap-[10px] overflow-auto'
                                       ref={scrollContainer}>
-                                      {boothInfo.boothImage.map(
-                                          (boothImage, boothImageIndex) => (
-                                              <div
-                                                  key={boothImageIndex}
-                                                  className='w-[160px] h-[160px] rounded-2xl bg-gray-50 shrink-0 border border-gray-200 bg-contain bg-no-repeat bg-center'
-                                                  style={{
-                                                      backgroundImage: `url(${boothImage})`,
-                                                  }}></div>
-                                          )
-                                      )}
+                                        {boothInfo.boothImage.map((boothImage, boothImageIndex) =>
+                                          boothImage !== '' ? (
+                                            <div
+                                              key={boothImageIndex}
+                                              className='w-[160px] h-[160px] rounded-2xl bg-gray-50 shrink-0 border border-gray-200 bg-contain bg-no-repeat bg-center'
+                                              style={{
+                                                backgroundImage: `url(${boothImage})`,
+                                              }}
+                                            ></div>
+                                          ) : null
+                                        )}
                                   </div>
                                   <div onClick={handleClickRightIndicator}>
                                       <IconIndicator right />
                                   </div>
                               </div>
                           </div>
-                          <div className='flex items-start flex-col gap-[26px] py-10 lg:items-center lg:flex-row'>
-                              <div className='w-[200px] h-[45px] rounded-xl flex items-center justify-center bg-primary-800-light-8 text-primary-800-light-86 text-md font-semibold px-5 gap-3 shrink-0'>
-                                  현재 테이블 개수{' '}
-                                  <span className='text-secondary-700'>
-                                      {tableNum}개
-                                  </span>
-                              </div>
-                              <div className='text-secondary-700 text-sm'>
-                                  * 테이블 번호 클릭 시 테이블의 QR 코드 주소가
-                                  복사됩니다.
-                              </div>
-                          </div>
-
-                          <div className='grid 3xl:grid-cols-4 2xl:grid-cols-3 lg:grid-cols-2 gap-5 place-items-center'>
-                              {tableNumList.map((table, tableIndex) => (
-                                  <div
-                                      key={tableIndex}
-                                      className='h-14 flex text-center rounded-3lg shadow-secondary w-full'>
-                                      <div
-                                          onClick={() =>
-                                              handleClickTableNum(tableIndex)
-                                          }
-                                          className='w-[100px] bg-primary-800-light-8 rounded-l-3lg border-1 border-primary-800-light-24 text-secondary-700 font-medium text-sm grid place-items-center cursor-pointer'>
-                                          테이블 {tableIndex + 1}
-                                      </div>
-                                      <div className='grow min-w-[120px] bg-white rounded-r-3lg border-1 border-primary-800-light-16 border-l-0 grid place-items-center text-secondary-800 text-sm font-semibold'>
-                                          {table.customTableNum}
-                                      </div>
+                          {boothInfo.isOrder && (
+                            <div>
+                              <div className='flex items-start flex-col gap-[26px] py-10 lg:items-center lg:flex-row'>
+                                  <div className='w-[200px] h-[45px] rounded-xl flex items-center justify-center bg-primary-800-light-8 text-primary-800-light-86 text-md font-semibold px-5 gap-3 shrink-0'>
+                                      현재 테이블 개수{' '}
+                                      <span className='text-secondary-700'>
+                                          {tableNum}개
+                                      </span>
                                   </div>
-                              ))}
-                          </div>
+                                  <div className='text-secondary-700 text-sm'>
+                                      * 테이블 번호 클릭 시 테이블의 QR 코드 주소가
+                                      복사됩니다.
+                                  </div>
+                              </div>
+                                <div className='grid 3xl:grid-cols-4 2xl:grid-cols-3 lg:grid-cols-2 gap-5 place-items-center'>
+                                    {tableNumList.map((table, tableIndex) => (
+                                        <div
+                                            key={tableIndex}
+                                            className='h-14 flex text-center rounded-3lg shadow-secondary w-full'>
+                                            <div
+                                                onClick={() =>
+                                                    handleClickTableNum(tableIndex)
+                                                }
+                                                className='w-[100px] bg-primary-800-light-8 rounded-l-3lg border-1 border-primary-800-light-24 text-secondary-700 font-medium text-sm grid place-items-center cursor-pointer'>
+                                                테이블 {tableIndex + 1}
+                                            </div>
+                                            <div className='grow min-w-[120px] bg-white rounded-r-3lg border-1 border-primary-800-light-16 border-l-0 grid place-items-center text-secondary-800 text-sm font-semibold'>
+                                                {table.customTableNum}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                          )}
                       </div>
                   </div>
                   {ADMIN_CATEGORY[boothInfo.adminCategory] == 'night' && (
