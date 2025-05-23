@@ -846,7 +846,7 @@ const BoothEditPage: React.FC = () => {
                     <input
                       className="w-full h-[45px] border border-gray-500 rounded-xl px-[20px] focus:border-primary-800 text-sm"
                       type="text"
-                      maxLength={100}
+                      maxLength={200}
                       placeholder="카카오페이 딥 링크"
                       onChange={handleInputKakaoPay}
                       value={boothInfo?.kakaoPay ?? ''}
@@ -870,7 +870,7 @@ const BoothEditPage: React.FC = () => {
                   <input
                     className="w-full h-[45px] border border-gray-500 rounded-xl px-[20px] focus:border-primary-800 text-sm"
                     type="text"
-                    maxLength={100}
+                    maxLength={200}
                     placeholder="토스페이 딥 링크"
                     onChange={handleInputTossPay}
                     value={boothInfo?.tossPay ?? ''}
