@@ -38,7 +38,7 @@ const OrderReadyCard: React.FC<OrderReadyCardProps> = (props) => {
           <div>{getHourandMinute(props.createAt)}</div>
         </div>
       </div>
-      <div className={`relative h-[353px] w-full overflow-y-auto ${props.menuList.length < 7 ? 'overflow-y-hidden' : ''}`}>
+      <div className={`relative h-[353px] w-full overflow-y-auto scrollbar-hide ${props.menuList.length < 7 ? 'overflow-y-hidden' : ''}`}>
         <table className="w-full bg-white relative">
           <thead>
             <tr className="h-[38px] border-b border-secondary-300 text-sm">

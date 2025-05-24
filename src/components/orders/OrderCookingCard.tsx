@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import { api } from '@/utils/api';
 import { useTableStatusOrder } from '@/stores/orders/tableStatusOrder';
@@ -27,14 +27,14 @@ const OrderCookingCard: React.FC<CookingMenu> = ({ menuId, menuName, tableCount,
 
   const getLocalServed = (cook: Cook) => {
     return localCookMap[cook.cookId] ?? cook.servedCount;
-  };
+  };  
 
   const patchCookServeCount = async (cookId: string, servedCount: number) => {
     try {
       const response = await api.put(`/admin/booth/${boothId}/order/cook/count`, { cookId, servedCount });
       if (response.data.success) {
         const updatedCount = response.data.data.servedCount;
-  
+
         setLocalCookMap((prev) => ({
           ...prev,
           [cookId]: updatedCount,
@@ -49,7 +49,7 @@ const OrderCookingCard: React.FC<CookingMenu> = ({ menuId, menuName, tableCount,
     if (!patchDebounceMap.current[cookId]) {
       patchDebounceMap.current[cookId] = _.debounce((count: number) => {
         patchCookServeCount(cookId, count);
-      }, 300);
+      }, 200);
     }
     return patchDebounceMap.current[cookId];
   };
@@ -110,15 +110,24 @@ const OrderCookingCard: React.FC<CookingMenu> = ({ menuId, menuName, tableCount,
     }
   };
 
+  useEffect(() => {
+    const initialMap = cookList.reduce((acc, cook) => {
+      acc[cook.cookId] = cook.servedCount;
+      return acc;
+    }, {} as Record<string, number>);
+
+    setLocalCookMap(initialMap);
+  }, [cookList]);  
+
   return (
     <div className='w-full min-w-[350px] h-[400px] rounded-3xl flex flex-col justify-between outline outline-1 outline-primary-800-light-24 max-w-[350px] shrink-0'>
       <div className='flex justify-center w-full h-[65px] items-center rounded-t-3xl px-[28px] text-lg font-semibold bg-primary-800-light-8 border-b border-primary-200'>
         {menuName}
       </div>
-      <div className={`relative h-[353px] w-full overflow-y-auto ${cookList.length < 6 ? 'overflow-y-hidden' : ''}`}>
+      <div className={`relative h-[353px] w-full overflow-y-auto scrollbar-hide ${cookList.length < 6 ? 'overflow-y-hidden' : ''}`}>
         <table className='w-full bg-white relative'>
-          <thead>
-            <tr className='h-[38px] border-b border-secondary-300 text-[13px]'>
+          <thead className='sticky top-0 bg-white z-10'>
+            <tr className='h-[38px] border-b border-secondary-300 text-[13px] shadow-sm'>
               <th className='text-center align-middle pl-[28px] min-w-[70px] select-none'>테이블 번호</th>
               <th className='min-w-[30px] text-center align-middle'>수량</th>
               <th className='min-w-[120px] text-center align-middle'>조리 현황</th>

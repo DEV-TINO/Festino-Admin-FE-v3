@@ -31,6 +31,14 @@ const OrderCookingPage: React.FC = () => {
     };
   }, [boothId, nowDate]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getCookingOrderList({ boothId, date: nowDate });
+    }, 2000); // 2초 간격으로 서버에서 최신 조리 현황 받아오기
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
       <div className="flex gap-4 items-center">

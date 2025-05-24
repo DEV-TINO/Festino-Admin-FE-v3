@@ -40,7 +40,7 @@ const OrderCancelCard: React.FC<OrderCancelCardProps> = (props) => {
       </div>
 
       <div
-        className={`relative h-[353px] w-full overflow-y-auto ${props.menuList.length < 7 ? 'overflow-y-hidden' : ''}`}
+        className={`relative h-[353px] w-full overflow-y-auto scrollbar-hide ${props.menuList.length < 7 ? 'overflow-y-hidden' : ''}`}
       >
         <table className="w-full bg-white relative">
           <thead>

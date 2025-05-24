@@ -29,6 +29,7 @@ const OrderPopup: React.FC = () => {
     setIsSubmit(true);
     await submitPopup({ type: submitType });
     setIsSubmit(false);
+    closePopup();
   };
 
   useEffect(() => {
