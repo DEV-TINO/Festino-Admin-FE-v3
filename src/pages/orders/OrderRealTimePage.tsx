@@ -92,7 +92,7 @@ const OrderRealTimePage: React.FC = () => {
             <div className="text-sm text-danger pl-5">새로운 입금 대기가 들어왔어요!</div>
           )}
         </div>
-        <div className={`min-w-full flex 3xl:flex-col rounded-xl ${bgMap[type]} gap-[40px] py-[30px] px-[15px] 3xl:justify-center 3xl:items-center overflow-x-auto 3xl:w-[420px]`}>
+        <div className={`min-w-full flex 3xl:flex-col rounded-xl ${bgMap[type]} gap-[40px] py-[30px] px-[15px] items-center overflow-x-auto 3xl:w-[350px]`}>
           {data.length > 0 ? (
             data.map((order, index) => (
               <OrderCard key={index} type={type} cardData={order} />
