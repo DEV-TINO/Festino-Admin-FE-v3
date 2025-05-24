@@ -7,7 +7,7 @@ import { OrderCardProps } from '@/types/orders/order.types';
 
 const OrderCard: React.FC<OrderCardProps> = ({ type, cardData }) => {
   return (
-    <div className="w-full flex flex-col 2xl:items-center 2xl:px-8 select-none">
+    <div className="w-full max-w-[350px] flex flex-col 2xl:items-center 2xl:px-8 select-none">
       {type === 'ready' && <OrderReadyCard {...cardData} />}
       {type === 'cooking' && <OrderCookingCard {...cardData} />}
       {type === 'finish' && <OrderFinishCard {...cardData} />}
