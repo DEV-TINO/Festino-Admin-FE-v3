@@ -11,6 +11,7 @@ import { ADMIN_CATEGORY, MENU_TYPE } from '@/constants/constant';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useUserStore } from '@/stores/logins/userStore';
+import FestinoLogo from '@/components/icons/FestinoLogo';
 
 const BoothDetailPage: React.FC = () => {
   const { reset, init, boothInfo, menuList, updateBoothInfo, updateMenuList } = useBoothDetail();
@@ -305,10 +306,7 @@ const BoothDetailPage: React.FC = () => {
                         />
                       ) : (
                         <div className="w-[120px] h-[120px] rounded-xl flex-shrink-0 border-gray-200 border flex items-center justify-center bg-white">
-                          <img
-                            src="../../../public/tino-cheer-up.png"
-                            className="w-[60px] h-[60px] object-contain"
-                          />
+                          <FestinoLogo />
                         </div>
                       )}
                       <div className='flex flex-col w-full justify-between'>

@@ -12,6 +12,7 @@ import { useBoothDetail } from '@/stores/booths/boothDetail';
 import { useTableDetail } from '@/stores/booths/tableDetail';
 import { useMenuModal } from '@/stores/booths/menuModal';
 import { useUserStore } from '@/stores/logins/userStore';
+import FestinoLogo from '@/components/icons/FestinoLogo';
 
 const BoothEditPage: React.FC = () => {
   const navigate = useNavigate();
@@ -704,10 +705,7 @@ const BoothEditPage: React.FC = () => {
                       />
                     ) : (
                       <div className="w-[120px] h-[120px] rounded-xl flex-shrink-0 border-gray-200 border flex items-center justify-center bg-white">
-                        <img
-                          src="../../../public/tino-cheer-up.png"
-                          className="w-[60px] h-[60px] object-contain"
-                        />
+                        <FestinoLogo />
                       </div>
                     )}
                     <div className="flex flex-col w-full justify-between">
