@@ -697,10 +697,19 @@ const BoothEditPage: React.FC = () => {
                     onDragEnter={(e) => e.preventDefault()}
                     onDrop={(e) => handleDropMenu(e, menuIndex)}
                   >
-                    <div
-                      className="hidden md:block w-[120px] h-[120px] bg-contain bg-no-repeat bg-center bg-white rounded-xl flex-shrink-0 border-gray-200 border"
-                      style={setBackgroundImage(menu.menuImage)}
-                    />
+                    {menu.menuImage !== '' ? (
+                      <div
+                        className="hidden md:block w-[120px] h-[120px] bg-contain bg-no-repeat bg-center bg-white rounded-xl flex-shrink-0 border-gray-200 border"
+                        style={setBackgroundImage(menu.menuImage)}
+                      />
+                    ) : (
+                      <div className="w-[120px] h-[120px] rounded-xl flex-shrink-0 border-gray-200 border flex items-center justify-center bg-white">
+                        <img
+                          src="../../../public/tino-cheer-up.png"
+                          className="w-[60px] h-[60px] object-contain"
+                        />
+                      </div>
+                    )}
                     <div className="flex flex-col w-full justify-between">
 
                       <div className="flex justify-between items-center h-[29px] w-full min-w-fit gap-2">
