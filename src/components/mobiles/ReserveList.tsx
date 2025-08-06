@@ -88,7 +88,7 @@ export default function ReserveList({ listType }: Props) {
               </div>
               <div className="w-4/12 items-center flex flex-col">
                 <div className="text-sm">{getMobileNum(data.phoneNum)}</div>
-                <div className="text-secondary-700 text-xs">{prettyDate(data.updateAt)}</div>
+                <div className="text-secondary-700 text-xs">{prettyDate(data.updatedAt)}</div>
               </div>
               <div className="w-3/12 flex justify-center gap-1.5">
                 <div

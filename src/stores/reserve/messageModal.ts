@@ -5,7 +5,7 @@ export interface MessageInfo {
   reservationNum: number | string;
   userName: string;
   phoneNum: string;
-  updateAt: string;
+  updatedAt: string;
 }
 
 interface MessageModalStore {
