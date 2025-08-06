@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+
 export const formatMonth = (month: number) => {
   return String(month).padStart(2, '0');
 }
@@ -9,7 +11,7 @@ export const isUUID = (uuid: string): boolean => {
 };
 
 // 배경 이미지 스타일 반환
-export const setBackgroundImage = (url: string): React.CSSProperties => {
+export const setBackgroundImage = (url: string): CSSProperties => {
   return {
     backgroundImage: `url(${url})`,
   };
