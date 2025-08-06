@@ -32,7 +32,7 @@ export const useBoothList = create<BoothListState>((set, get) => ({
   },  
 
   setBoothList: (boothList) => {
-    boothList = boothList;
+    set({ boothList });
   },
 
   handleClickBoothDetail: (boothId: string) => {
