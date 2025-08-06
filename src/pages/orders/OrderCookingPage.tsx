@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useCookingOrder } from '@/stores/orders/cookingOrder';
 import IconNotFound from '@/components/icons/IconNotFound';
 import OrderCookingCard from '@/components/orders/OrderCookingCard';
@@ -13,31 +13,17 @@ const OrderCookingPage: React.FC = () => {
     getCookingOrderList,
   } = useCookingOrder();
 
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
   useEffect(() => {
     if (!boothId) return;
 
     getCookingOrderList({ boothId, date: nowDate });
 
-    intervalRef.current = setInterval(() => {
-      getCookingOrderList({ boothId, date: nowDate });
-    }, 3000);
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [boothId, nowDate]);
-
-  useEffect(() => {
     const interval = setInterval(() => {
       getCookingOrderList({ boothId, date: nowDate });
     }, 2000); // 2초 간격으로 서버에서 최신 조리 현황 받아오기
 
     return () => clearInterval(interval);
-  }, []);
+  }, [boothId, nowDate]);
 
   return (
     <>
