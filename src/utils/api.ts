@@ -46,16 +46,26 @@ export const imagesUpload = async (files: FileList | File[]): Promise<string[]> 
 };
 
 // 에러 알림 및 이동
-export const alertError = (errorMessage: string | unknown) => {
-  // const navigate = useNavigate();
-  alert(`${errorMessage}, 관리자에게 문의하세요.`);
+export const alertError = (
+  error: unknown,
+  navigate?: (path: string) => void
+): void => {
+  const message =
+    typeof error === 'string'
+      ? error
+      : error instanceof Error
+        ? error.message
+        : String(error);
 
-  if (true) {
-    const currentPath = window.location.pathname;
-    if (currentPath.includes('mobile')) {
-      // navigate('/mobile/main');
-    } else {
-      // navigate('/');
-    }
+  alert(`${message}, 관리자에게 문의하세요.`);
+
+  const redirectPath = window.location.pathname.includes('mobile')
+    ? '/mobile/main'
+    : '/';
+
+  if (navigate) {
+    navigate(redirectPath);
+  } else {
+    window.location.assign(redirectPath);
   }
 };
