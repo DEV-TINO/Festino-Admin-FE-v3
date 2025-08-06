@@ -2,8 +2,12 @@ import { create } from 'zustand';
 import { api, alertError } from '@/utils/api';
 import { ADMIN_CATEGORY } from '@/constants/constant';
 import { BoothListState } from '@/types/booths/booth.types';
+import { useNavigate } from 'react-router-dom';
 
-export const useBoothList = create<BoothListState>((set, get) => ({
+export const useBoothList = create<BoothListState>((set, get) => {
+  const navigate = useNavigate();
+
+  return {
   boothList: [],
 
   getAllBoothList: async () => {
@@ -36,7 +40,7 @@ export const useBoothList = create<BoothListState>((set, get) => ({
   },
 
   handleClickBoothDetail: (boothId: string) => {
-    window.location.href = `/booth/${boothId}`;
+    navigate(`/booth/${boothId}`);
   },
 
   updateBoothOpen: async ({ boothId, isOpen, adminCategory }) => {
@@ -102,4 +106,5 @@ export const useBoothList = create<BoothListState>((set, get) => ({
       console.error(error);
     }
   },
-}));
+};
+});
