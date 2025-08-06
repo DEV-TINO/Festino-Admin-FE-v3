@@ -2,12 +2,12 @@ import { create } from 'zustand';
 import { alertError, api } from '@/utils/api';
 
 interface ReserveItem {
-  reservationId: string; 
+  reservationId: string;
   userName: string;
   reservationNum: string | number;
   personCount: number;
   phoneNum: string;
-  updateAt: string;
+  updatedAt: string;
 }
 
 type ReserveType = 'reserve' | 'cancel' | 'complete';

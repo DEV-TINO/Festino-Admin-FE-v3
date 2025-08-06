@@ -19,7 +19,7 @@ interface ReserveItem {
   reservationNum: string | number;
   personCount: number;
   phoneNum: string;
-  updateAt?: string;
+  updatedAt?: string;
 }
 
 type ReserveType = 'reserve' | 'cancel' | 'complete';
@@ -470,7 +470,7 @@ const TablingPage: React.FC = () => {
                                           {prettyPhoneNumber(reserve.phoneNum)}
                                       </td>
                                       <td className='px-4 py-4 text-center'>
-                                          {prettyDate(reserve.updateAt)} 20:30
+                                          {prettyDate(reserve.updatedAt)} 20:30
                                       </td>
                                       {selectOrderType !== 'complete' && (
                                           <td className='px-[2px] py-4 lg:px-1 w-10 lg:w-12'>

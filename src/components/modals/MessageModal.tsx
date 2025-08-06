@@ -64,8 +64,8 @@ const MessageModal: React.FC = () => {
                   <td><span>{messageInfo.phoneNum}</span></td>
                   <td>
                     <span>
-                      {messageInfo.updateAt
-                        ? `${prettyDate(messageInfo.updateAt)} 20:30`
+                      {messageInfo.updatedAt
+                        ? `${prettyDate(messageInfo.updatedAt)} 20:30`
                         : '-'}
                     </span>
                   </td>
