@@ -61,7 +61,7 @@ export interface BoothInfo {
   openTime: string;
   closeTime: string;
   boothIntro: string;
-  boothImage: any[];
+  boothImage: string[];
   location: string;
   isCall: boolean;
   isOpen: boolean;

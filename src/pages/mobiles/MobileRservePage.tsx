@@ -43,7 +43,7 @@ const MobileReservePage: React.FC = () => {
   useEffect(() => {
     const init = async () => {
       await getAllBoothList();
-      const filtered = boothList.filter((booth: any) => booth?.isReservation);
+      const filtered = (boothList as Booth[]).filter((booth: Booth) => booth?.isReservation);
       setReserveBoothList(filtered);
 
       if (isAdmin) {
@@ -54,7 +54,7 @@ const MobileReservePage: React.FC = () => {
         setSelectedBooth(filtered[0]);
       } else {
         if (userOwnBoothId) {
-          const found = filtered.find((booth: any) => booth.boothId === userOwnBoothId);
+          const found = filtered.find((booth: Booth) => booth.boothId === userOwnBoothId);
           if (found) {
             setSelectedBooth(found);
             setBoothInfo(found);

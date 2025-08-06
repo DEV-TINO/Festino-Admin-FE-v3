@@ -5,7 +5,7 @@ import IconNotFound from '@/components/icons/IconNotFound';
 import { cloneDeep, isEqual } from 'lodash';
 import OrderCard from '@/components/orders/OrderCard';
 import { useNowOrderStore } from '@/stores/orders/nowOrder';
-import { WaitDepositOrder } from '@/types/orders/order.types';
+import { WaitDepositOrder, CookingMenu, FinishOrder } from '@/types/orders/order.types';
 
 const OrderRealTimePage: React.FC = () => {
   const { boothId } = useTableStatusOrder();
@@ -58,7 +58,9 @@ const OrderRealTimePage: React.FC = () => {
     };
   }, [boothId, nowDate]);
 
-  const renderCardSection = (type: string, data: any[]) => {
+  type OrderData = WaitDepositOrder | CookingMenu | FinishOrder;
+
+  const renderCardSection = (type: string, data: OrderData[]) => {
     const bgMap: Record<string, string> = {
       ready: 'bg-danger-600-light-5',
       cooking: 'bg-primary-600-light-5',
