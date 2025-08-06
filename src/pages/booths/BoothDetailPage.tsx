@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useUserStore } from '@/stores/logins/userStore';
 import FestinoLogo from '@/components/icons/FestinoLogo';
+import { Menu } from '@/types/booths/booth.types';
 
 const BoothDetailPage: React.FC = () => {
   const { reset, init, boothInfo, menuList, updateBoothInfo, updateMenuList } = useBoothDetail();
@@ -44,7 +45,7 @@ const BoothDetailPage: React.FC = () => {
     scrollImage('right');
   };
 
-  const handleClickSoldOut = async (menu: any) => {
+  const handleClickSoldOut = async (menu: Menu) => {
     if (isBoothOwner) {
       try {
         const response = await api.put('/admin/menu/sold-out', {
